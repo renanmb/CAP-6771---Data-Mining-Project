@@ -1,14 +1,14 @@
 [
   {
-    "listing": "/people/index.html",
-    "items": [
-      "/people/barbosa-renan/index.html"
-    ]
-  },
-  {
     "listing": "/blog.html",
     "items": [
       "/posts/renan-blog-post-1/index.html"
+    ]
+  },
+  {
+    "listing": "/people/index.html",
+    "items": [
+      "/people/barbosa-renan/index.html"
     ]
   }
 ]

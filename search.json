@@ -1,24 +1,38 @@
 [
   {
+    "objectID": "people/barbosa-renan/index.html#education",
+    "href": "people/barbosa-renan/index.html#education",
+    "title": "Renan Monteiro Barbosa",
+    "section": "Education",
+    "text": "Education\nB.S. Mechanical Engineering | University of West Florida"
+  },
+  {
+    "objectID": "report.html",
+    "href": "report.html",
+    "title": "House Price Forecasting",
+    "section": "",
+    "text": "The report goes here need some work\nSlides: slides.html"
+  },
+  {
+    "objectID": "report.html#introduction",
+    "href": "report.html#introduction",
+    "title": "House Price Forecasting",
+    "section": "Introduction",
+    "text": "Introduction\nNeed to add report stuff\n\nReferences"
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Literature Review",
+    "section": "",
+    "text": "These are the literature review done by all the students during this semester.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome to the Project\n\n\n\nrenan\n\n\n\nFirst post for course CAP-6771 (Fall 2025)\n\n\n\n\n\nRenan monteiro barbosa\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Data mining Project",
     "section": "",
     "text": "As part of the CARP-6771 Data mining Fall-2025 class at University of West Florida (UWF), our team completed a project on House Price Forecasting.\nThis project was completed under the guidance of Dr. Sikha Bagui (Sikha Bagui | Dr. Sikha Bagui)."
-  },
-  {
-    "objectID": "people/index.html",
-    "href": "people/index.html",
-    "title": "Meet the Group",
-    "section": "",
-    "text": "Graduate Student, Masters Data Science\n\n\n\n\n\neducation\n\n\nB.S. Mechanical Engineering | University of West Florida\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "people/index.html#graduate-students",
-    "href": "people/index.html#graduate-students",
-    "title": "Meet the Group",
-    "section": "",
-    "text": "Graduate Student, Masters Data Science\n\n\n\n\n\neducation\n\n\nB.S. Mechanical Engineering | University of West Florida\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "slides.html#introduction",
@@ -68,20 +82,6 @@
     "title": "Present a great story for data science projects",
     "section": "References",
     "text": "References"
-  },
-  {
-    "objectID": "report.html",
-    "href": "report.html",
-    "title": "House Price Forecasting",
-    "section": "",
-    "text": "The report goes here need some work\nSlides: slides.html"
-  },
-  {
-    "objectID": "report.html#introduction",
-    "href": "report.html#introduction",
-    "title": "House Price Forecasting",
-    "section": "Introduction",
-    "text": "Introduction\nNeed to add report stuff\n\nReferences"
   },
   {
     "objectID": "posts/renan-blog-post-1/index.html",
@@ -140,17 +140,17 @@
     "text": "Welcome to our team! We are a group of collaborators dedicated to…\n\n\n\nRenan Monteiro Barbosa\n\nData Scientist\n\n\n\nRenan Monteiro Barbosa\n\n\nJane is a data scientist with over 10 years of experience…\nContact * Email: jane@example.com * GitHub: https://github.com/renanmb\n\n\n\nBinita Subedi\n\nAdd description here\n\n\n\nBinita Subedi\n\n\nBinita Subedi is a software engineer specializing in web development…\nContact * Email: bs174@students.uwf.edu * GitHub: https://github.com/Binita-subedi\n\n\n\nMatthew Ray\n\nAdd description here\n\n\n\nMatthew Ray\n\n\nMatthew Ray works on developing new research methodologies for…\nContact * Email: mr168@students.uwf.edu * Website: alex-johnson.com"
   },
   {
-    "objectID": "people/barbosa-renan/index.html#education",
-    "href": "people/barbosa-renan/index.html#education",
-    "title": "Renan Monteiro Barbosa",
-    "section": "Education",
-    "text": "Education\nB.S. Mechanical Engineering | University of West Florida"
+    "objectID": "people/index.html",
+    "href": "people/index.html",
+    "title": "Meet the Group",
+    "section": "",
+    "text": "Graduate Student, Masters Data Science\n\n\n\n\n\neducation\n\n\nB.S. Mechanical Engineering | University of West Florida\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "blog.html",
-    "href": "blog.html",
-    "title": "Literature Review",
+    "objectID": "people/index.html#graduate-students",
+    "href": "people/index.html#graduate-students",
+    "title": "Meet the Group",
     "section": "",
-    "text": "These are the literature review done by all the students during this semester.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome to the Project\n\n\n\nrenan\n\n\n\nFirst post for course CAP-6771 (Fall 2025)\n\n\n\n\n\nRenan monteiro barbosa\n\n\n\n\n\nNo matching items"
+    "text": "Graduate Student, Masters Data Science\n\n\n\n\n\neducation\n\n\nB.S. Mechanical Engineering | University of West Florida\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]
