@@ -1,0 +1,156 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Data mining Project",
+    "section": "",
+    "text": "As part of the CARP-6771 Data mining Fall-2025 class at University of West Florida (UWF), our team completed a project on House Price Forecasting.\nThis project was completed under the guidance of Dr. Sikha Bagui (Sikha Bagui | Dr. Sikha Bagui)."
+  },
+  {
+    "objectID": "people/index.html",
+    "href": "people/index.html",
+    "title": "Meet the Group",
+    "section": "",
+    "text": "Graduate Student, Masters Data Science\n\n\n\n\n\neducation\n\n\nB.S. Mechanical Engineering | University of West Florida\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "people/index.html#graduate-students",
+    "href": "people/index.html#graduate-students",
+    "title": "Meet the Group",
+    "section": "",
+    "text": "Graduate Student, Masters Data Science\n\n\n\n\n\neducation\n\n\nB.S. Mechanical Engineering | University of West Florida\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "slides.html#introduction",
+    "href": "slides.html#introduction",
+    "title": "Present a great story for data science projects",
+    "section": "Introduction",
+    "text": "Introduction\n\nDevelop a storyline that captures attention and maintains interest.\nYour audience is your peers\nClearly state the problem or question you’re addressing.\nIntroduce why it is relevant needs.\nProvide an overview of your approach.\n\nIn kernel estimator, weight function is known as kernel function[efr2008?]. Cite this paper[bro2014principal?]. The GEE[wang2014?]. The PCA[daffertshofer2004pca?]*"
+  },
+  {
+    "objectID": "slides.html#methods",
+    "href": "slides.html#methods",
+    "title": "Present a great story for data science projects",
+    "section": "Methods",
+    "text": "Methods\n\nDetail the models or algorithms used.\nJustify your choices based on the problem and data."
+  },
+  {
+    "objectID": "slides.html#data-exploration-and-visualization",
+    "href": "slides.html#data-exploration-and-visualization",
+    "title": "Present a great story for data science projects",
+    "section": "Data Exploration and Visualization",
+    "text": "Data Exploration and Visualization\n\nDescribe your data sources and collection process.\nPresent initial findings and insights through visualizations.\nHighlight unexpected patterns or anomalies."
+  },
+  {
+    "objectID": "slides.html#data-exploration-and-visualization-1",
+    "href": "slides.html#data-exploration-and-visualization-1",
+    "title": "Present a great story for data science projects",
+    "section": "Data Exploration and Visualization",
+    "text": "Data Exploration and Visualization\nA study was conducted to determine how…"
+  },
+  {
+    "objectID": "slides.html#modeling-and-results",
+    "href": "slides.html#modeling-and-results",
+    "title": "Present a great story for data science projects",
+    "section": "Modeling and Results",
+    "text": "Modeling and Results\n\nExplain your data preprocessing and cleaning steps.\nPresent your key findings in a clear and concise manner.\nUse visuals to support your claims.\nTell a story about what the data reveals."
+  },
+  {
+    "objectID": "slides.html#conclusion",
+    "href": "slides.html#conclusion",
+    "title": "Present a great story for data science projects",
+    "section": "Conclusion",
+    "text": "Conclusion\n\nSummarize your key findings.\nDiscuss the implications of your results."
+  },
+  {
+    "objectID": "slides.html#references",
+    "href": "slides.html#references",
+    "title": "Present a great story for data science projects",
+    "section": "References",
+    "text": "References"
+  },
+  {
+    "objectID": "report.html",
+    "href": "report.html",
+    "title": "House Price Forecasting",
+    "section": "",
+    "text": "The report goes here need some work\nSlides: slides.html"
+  },
+  {
+    "objectID": "report.html#introduction",
+    "href": "report.html#introduction",
+    "title": "House Price Forecasting",
+    "section": "Introduction",
+    "text": "Introduction\nNeed to add report stuff\n\nReferences"
+  },
+  {
+    "objectID": "posts/renan-blog-post-1/index.html",
+    "href": "posts/renan-blog-post-1/index.html",
+    "title": "Welcome to the Project",
+    "section": "",
+    "text": "For this class setup a website to present the project"
+  },
+  {
+    "objectID": "posts/renan-blog-post-1/index.html#introduction",
+    "href": "posts/renan-blog-post-1/index.html#introduction",
+    "title": "Welcome to the Project",
+    "section": "Introduction",
+    "text": "Introduction\nMake some cheesy introduction"
+  },
+  {
+    "objectID": "posts/renan-blog-post-1/index.html#how-to-setup-renv",
+    "href": "posts/renan-blog-post-1/index.html#how-to-setup-renv",
+    "title": "Welcome to the Project",
+    "section": "How to setup RENV",
+    "text": "How to setup RENV\nWhat is renv ?? well, it is an R package that provides powerful dependency management for your projects, ensuring they are isolated, portable, and reproducible.\n```{bash}\nrenv::init()\n```"
+  },
+  {
+    "objectID": "posts/renan-blog-post-1/index.html#how-to-setup-uv",
+    "href": "posts/renan-blog-post-1/index.html#how-to-setup-uv",
+    "title": "Welcome to the Project",
+    "section": "How to setup UV",
+    "text": "How to setup UV\nUV is an extremely fast, next-generation Python package installer and resolver built in Rust by Astral, by consolidating environment creation, package installation, and dependency locking into a single, blazing-fast command-line tool, UV drastically simplifies and accelerates Python development workflows, saving developers significant time and frustration.\n```{bash}\nuv add requests\nuv remove requests\nuv lock --upgrade-package requests\nuv venv\nuv sync\n```\nActivating a VENV\n```{bash}\nsource .venv/bin/activate\n```\nYou can add dependencies to your pyproject.toml with the uv add command. This will also update the lockfile and project environment:\n```{bash}\nuv add requests\n```\nTo remove a package, you can use uv remove:\n```{bash}\nuv remove requests\n```\nTo upgrade a package, run uv lock with the –upgrade-package flag:\n```{bash}\nuv lock --upgrade-package requests\n```\nCreating a virtual environment\n```{bash}\nuv venv\n```\nSyncing the environment\n```{bash}\nuv sync\n```"
+  },
+  {
+    "objectID": "posts/renan-blog-post-1/index.html#getting-started-with-quarto",
+    "href": "posts/renan-blog-post-1/index.html#getting-started-with-quarto",
+    "title": "Welcome to the Project",
+    "section": "Getting Started with Quarto",
+    "text": "Getting Started with Quarto\nInstall the dependencies"
+  },
+  {
+    "objectID": "posts/renan-blog-post-1/index.html#how-to-render-and-preview-your-project",
+    "href": "posts/renan-blog-post-1/index.html#how-to-render-and-preview-your-project",
+    "title": "Welcome to the Project",
+    "section": "How to Render and Preview your project",
+    "text": "How to Render and Preview your project\nEither use the IDE of your preference, VSCode has extensions to support\nor run on the cmd:\nTo render the quarto document run:\n```{bash}\nquarto render\n```\nTo preview the rendered quarto document run:\n```{bash}\nquarto preview\n```"
+  },
+  {
+    "objectID": "posts/renan-blog-post-1/index.html#how-to-make-citations",
+    "href": "posts/renan-blog-post-1/index.html#how-to-make-citations",
+    "title": "Welcome to the Project",
+    "section": "How to make Citations",
+    "text": "How to make Citations\nBibTex is a great why to generate consistent and properly formatted Citations, to generate bibtex citations u can use GoogleScholar:\nExample: Add here some content explaining how to use GoogleScholar for citations\nAdd another example using citation generator\n\nCreate your BibTeX file (e.g., references.bib) and add your entries.\n\nExample:\n```{text}\n@inproceedings{Liu_2021,\n   title={Priority prediction of Asian Hornet sighting report using machine learning methods},\n   url={http://dx.doi.org/10.1109/SEAI52285.2021.9477549},\n   DOI={10.1109/seai52285.2021.9477549},\n   booktitle={2021 IEEE International Conference on Software Engineering and Artificial Intelligence (SEAI)},\n   publisher={IEEE},\n   author={Liu, Yixin and Guo, Jiaxin and Dong, Jieyang and Jiang, Luoqian and Ouyang, Haoyuan},\n   year={2021},\n   month=jun, pages={7–11} }\n```\n\nLink the file in your Quarto YAML header (the part at the very top):\n\n```{yml}\n---\ntitle: \"My Document\"\nbibliography: references.bib\n---\n```\n\nCite in your text using the BibTeX key:[key?] (e.g.,[smith2023?]).\n\nExample:\n```{text}\n[Priority prediction of Asian Hornet sighting report using machine learning methods](https://huggingface.co/papers/2107.05465). @Liu_2021\n```\nPriority prediction of Asian Hornet sighting report using machine learning methods.[1]\n\nAdd a “References” section at the end of your document where the bibliography will be printed.\n\nExample:\n```{text}\n### References\n\n::: {#refs}\n:::\n```\n\nReferences\n\n\n1. Liu, Y., Guo, J., Dong, J., Jiang, L., & Ouyang, H. (2021). Priority prediction of asian hornet sighting report using machine learning methods. 2021 IEEE International Conference on Software Engineering and Artificial Intelligence (SEAI), 7–11. https://doi.org/10.1109/seai52285.2021.9477549"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About Us",
+    "section": "",
+    "text": "Welcome to our team! We are a group of collaborators dedicated to…\n\n\n\nRenan Monteiro Barbosa\n\nData Scientist\n\n\n\nRenan Monteiro Barbosa\n\n\nJane is a data scientist with over 10 years of experience…\nContact * Email: jane@example.com * GitHub: https://github.com/renanmb\n\n\n\nBinita Subedi\n\nAdd description here\n\n\n\nBinita Subedi\n\n\nBinita Subedi is a software engineer specializing in web development…\nContact * Email: bs174@students.uwf.edu * GitHub: https://github.com/Binita-subedi\n\n\n\nMatthew Ray\n\nAdd description here\n\n\n\nMatthew Ray\n\n\nMatthew Ray works on developing new research methodologies for…\nContact * Email: mr168@students.uwf.edu * Website: alex-johnson.com"
+  },
+  {
+    "objectID": "people/barbosa-renan/index.html#education",
+    "href": "people/barbosa-renan/index.html#education",
+    "title": "Renan Monteiro Barbosa",
+    "section": "Education",
+    "text": "Education\nB.S. Mechanical Engineering | University of West Florida"
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Literature Review",
+    "section": "",
+    "text": "These are the literature review done by all the students during this semester.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome to the Project\n\n\n\nrenan\n\n\n\nFirst post for course CAP-6771 (Fall 2025)\n\n\n\n\n\nRenan monteiro barbosa\n\n\n\n\n\nNo matching items"
+  }
+]
