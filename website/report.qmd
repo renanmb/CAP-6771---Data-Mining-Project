@@ -1,0 +1,19 @@
+---
+title: "House Price Forecasting"
+bibliography: references.bib
+link-citations: true
+---
+
+The report goes here need some work
+
+Slides: [slides.html](slides.html){target="_blank"} 
+
+## Introduction
+
+Need to add report stuff
+
+
+### References
+
+::: {#refs}
+:::

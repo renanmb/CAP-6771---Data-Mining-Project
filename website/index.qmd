@@ -1,0 +1,10 @@
+---
+title: "Data mining Project"
+---
+
+As part of the CARP-6771 Data mining Fall-2025 class at University of West Florida (UWF), our team completed a project on House Price Forecasting.
+
+This project was completed under the guidance of Dr. Sikha Bagui ([Sikha Bagui | Dr. Sikha Bagui](https://uwf.edu/hmcse/departments/computer-science/faculty/dr-sikha-bagui.html)).
+
+
+

@@ -1,0 +1,54 @@
+---
+title: "About Us"
+---
+
+Welcome to our team! We are a group of collaborators dedicated to...
+
+:::{.column-screen-inset}
+
+:::{.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### Renan Monteiro Barbosa
+#### Data Scientist
+
+![Renan Monteiro Barbosa](images/spongebob-imagination.jpg){.about-image}
+
+Jane is a data scientist with over 10 years of experience...
+
+**Contact**
+* Email: `jane@example.com`
+* GitHub: [https://github.com/renanmb](https://github.com/renanmb)
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Binita Subedi
+#### Add description here
+
+![Binita Subedi](images/spongebob-imagination.jpg){.about-image}
+
+Binita Subedi is a software engineer specializing in web development...
+
+**Contact**
+* Email: `bs174@students.uwf.edu`
+* GitHub: [https://github.com/Binita-subedi](https://github.com/Binita-subedi)
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Matthew Ray
+#### Add description here
+
+![Matthew Ray](images/spongebob-imagination.jpg){.about-image}
+
+Matthew Ray works on developing new research methodologies for...
+
+**Contact**
+* Email: `mr168@students.uwf.edu`
+* Website: [alex-johnson.com](https://alex-johnson.com)
+:::
+
+
+
+:::
+
+:::

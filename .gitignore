@@ -160,7 +160,8 @@ cython_debug/
 #.idea/
 
 .DS_Store
-/.quarto/
+*/.quarto/
+*/_site/
 /.luarc.json
 
 # History files
