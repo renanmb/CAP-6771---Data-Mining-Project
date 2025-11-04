@@ -1,0 +1,26 @@
+{
+  "index.qmd": {
+    "index.html": "12b6ead9"
+  },
+  "posts/renan-blog-post-1/index.qmd": {
+    "index.html": "c321b244"
+  },
+  "report.qmd": {
+    "report.html": "9db357c4"
+  },
+  "about.qmd": {
+    "about.html": "5726a1c0"
+  },
+  "slides.qmd": {
+    "slides.html": "d3484ffd"
+  },
+  "people/barbosa-renan/index.qmd": {
+    "index.html": "b422a1f9"
+  },
+  "people/index.qmd": {
+    "index.html": "b91489c5"
+  },
+  "blog.qmd": {
+    "blog.html": "1cdcf8c9"
+  }
+}
