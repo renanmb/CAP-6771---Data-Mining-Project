@@ -1,0 +1,285 @@
+---
+title: "House Dataset Exploration"
+description: "Exploring House price datasets for CAP-6771 (Fall 2025)"
+author:
+  - name: Renan monteiro barbosa
+    url: https://github.com/renanmb
+    affiliation: Master of Data Science Program @ The University of West Florida (UWF)
+    # affiliation-url: https://ucsb-meds.github.io/
+# date: 10-24-2022
+categories: [renan]
+# citation:
+#   url: https://samanthacsik.github.io/posts/2022-10-24-my-blog-post/
+image: images/spongebob-imagination.jpg
+draft: false
+bibliography: references.bib
+link-citations: true
+---
+
+This report has a very basic exploration of the dataset for sake of simplicity and to keep it a small report, further exploration will be continuosly update on the project page: https://github.com/renanmb/CAP-6771---Data-Mining-Project
+
+## 1. Introduction
+
+On this blog post we will be exploring several data sources for the House Price Forecasting project and evaluating what can be done and what the next steps we must take to properly aanswer the research questions. 
+
+Run the following command to download the [Zillow Economics Data](https://www.kaggle.com/datasets/zillow/zecon) @ZHVI:
+
+```{{bash}}
+#!/bin/bash
+curl -L -o ~/Downloads/zecon.zip\
+  https://www.kaggle.com/api/v1/datasets/download/zillow/zecon
+```
+
+### 1.1 Load packages
+
+```{r}
+#| output: false
+
+# install.packages("fpp3")
+library(fpp3)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggtime)
+library(patchwork)
+```
+
+## 2. Load the Dataset
+
+The following code will locate the folder **datasets** and then it will give back the variable **datasets_path** which you can use to build the path to the desired data to be loaded.
+
+```{r}
+#| code-fold: true
+#| output: false
+find_git_root <- function(start = getwd()) {
+  path <- normalizePath(start, winslash = "/", mustWork = TRUE)
+  while (path != dirname(path)) {
+    if (dir.exists(file.path(path, ".git"))) return(path)
+    path <- dirname(path)
+  }
+  stop("No .git directory found — are you inside a Git repository?")
+}
+
+repo_root <- find_git_root()
+datasets_path <- file.path(repo_root, "datasets")
+zillow_economics_data_path <- file.path(datasets_path, "zillow-economics-data-01")
+
+state_time_series <- file.path(zillow_economics_data_path, "State_time_series.csv")
+all_states_data <- read.csv(state_time_series)
+```
+
+
+## 3. Exploring Data
+
+The 'Date' column is a character, let's convert it to a Date object.
+
+```{r}
+# Inspect the data structure
+str(all_states_data)
+```
+
+Now we Convert 'Date' column to a Date object.
+
+```{r}
+all_states_data$Date <- as.Date(all_states_data$Date)
+```
+
+Lets Check how many N/As and think about
+
+```{r}
+#| output: false
+# Count total NAs per column
+colSums(is.na(all_states_data))
+```
+
+Making it pretty
+
+```{r}
+# Get the total number of rows for calculating percentages
+total_rows <- nrow(all_states_data)
+
+# Create a pretty summary table
+na_summary <- all_states_data %>%
+  # 1. Count NAs for every column
+  summarise(across(everything(), ~sum(is.na(.)))) %>%
+  
+  # 2. Pivot the data from wide to long
+  pivot_longer(everything(),
+               names_to = "Column",
+               values_to = "NA_Count") %>%
+  
+  # 3. (Optional) Filter to only show columns that HAVE NAs
+  filter(NA_Count > 0) %>%
+  
+  # 4. (Optional) Add a percentage column
+  mutate(NA_Percentage = (NA_Count / total_rows) * 100) %>%
+
+  # 5. Sort by the highest NA count
+  arrange(desc(NA_Count))
+
+# Print the clean table
+print(na_summary)
+```
+
+```{r}
+#  Some random tinkering
+# head(all_states_data)
+# summary(all_states_data)
+```
+
+
+## 4. Time Series Initial Analysis
+
+Now we will further explore the dataset. As we could observe that the dataset is large and has many columns for metrics we must continue to filter for a specific state and metric to start making this more manageable. Then later we will come back to explore the full dataset and the other datasets.
+
+### 4.1 Zillow Economics Data
+
+We create the timeseries object using 'tsibble' which is a time-aware data frame. This is the standard object for the 'fpp3' workflow. Then we index the time component.
+
+For sake of simplicity we are going to focus for now on a single State (California) and the Zillow Home Value Index (ZHVI_AllHomes) over time.
+
+```{r}
+# Let's analyze the Zillow Home Value Index (ZHVI_AllHomes) for "California".
+cali_zhvi <- all_states_data %>%
+  filter(RegionName == "California") %>%
+  select(Date, ZHVI_AllHomes) %>%
+  # Remove any missing values for this metric
+  na.omit()
+```
+
+Just a quick check:
+
+```{r}
+# Inspect the new, focused data frame
+head(cali_zhvi)
+```
+
+Making the Time Series object cali_ts:
+
+```{r}
+cali_ts <- cali_zhvi %>%
+  as_tsibble(index = Date)
+```
+
+Further experiments need to handle the N/As when filling the gaps:
+
+```{r}
+# We set 'Date' as the 'index' (the time component).
+cali_ts_fill_gaps <- cali_zhvi %>%
+  as_tsibble(index = Date) %>%
+  fill_gaps()
+# If you were analyzing multiple states, you would add a 'key'.
+# Example for multiple states (not run here):
+# multi_state_ts <- all_states_data %>%
+#   select(Date, RegionName, ZHVI_AllHomes) %>%
+#   as_tsibble(index = Date, key = RegionName)
+```
+
+Lets see how many N/As after filling the gaps:
+
+```{r}
+#| output: false
+# Count total NAs per column
+colSums(is.na(cali_ts))
+colSums(is.na(cali_ts_fill_gaps))
+```
+
+Forward Fill (LOCF): Uses the last known value to fill gaps. Ideal for stable or categorical data but not for volatile metrics.
+
+```{r}
+# 1. APPLY LOCF TO THE CALIFORNIA DATA
+# ------------------------------------
+# We use fill() on the ZHVI_AllHomes column.
+# The default direction is "down", which is exactly what LOCF is.
+cali_locf <- cali_ts_fill_gaps %>%
+  fill(ZHVI_AllHomes)
+```
+
+```{r}
+# cali_ts
+```
+
+
+#### 4.1.1 Plot the Time Series
+
+We can make an initial plot to see that there is a trend and the data is non-stationary.
+
+```{r}
+cali_ts %>%
+  autoplot(ZHVI_AllHomes) +
+  labs(title = "Zillow Home Value Index (ZHVI) for California",
+       y = "Home Value Index",
+       x = "Year") +
+  theme_minimal()
+```
+
+We can see that filling the gaps creates some issues, this was fixed with the LOCF:
+
+```{r}
+cali_ts_fill_gaps %>%
+  autoplot(ZHVI_AllHomes) +
+  labs(title = "Zillow Home Value Index (ZHVI) for California",
+       y = "Home Value Index",
+       x = "Year") +
+  theme_minimal()
+```
+
+Exploring for Seasonality which is not that evident, need further study:
+
+```{r}
+# --- B. Look for Seasonality ---
+# A season plot layers the data by year, helping to spot seasonal patterns.
+cali_locf %>%
+  gg_season(ZHVI_AllHomes, labels = "right") +
+  labs(title = "Seasonal Plot: ZHVI for California",
+       y = "Home Value Index")
+```
+
+Let's plot the "before" and "after" side-by-side to see if there are any evident changes.
+
+```{r}
+# Plot 1: Using the original, gappy data
+p1 <- ggplot(cali_ts, aes(x = Date, y = ZHVI_AllHomes)) +
+  geom_line(color = "blue") +
+  labs(title = "Original (cali_ts)",
+       subtitle = "ggplot connects the dots over implicit gaps") +
+  theme_minimal()
+
+# Plot 2: Using the data fixed with fill_gaps()
+p2 <- ggplot(cali_locf, aes(x = Date, y = ZHVI_AllHomes)) +
+  geom_line(color = "blue") +
+  labs(title = "After: Forward Fill (LOCF)",
+       subtitle = "Gaps are filled with the last known value") +
+  theme_minimal()
+
+# Combine them side-by-side
+p1 + p2
+```
+
+
+
+## MISC
+
+The naniar package is built specifically for exploring missing data. It has a miss_var_summary() function that does help visualizing missing data. Might consider implementing.
+
+```{{r}}
+# install.packages("naniar")
+library(naniar)
+
+# This one function does it all, already sorted!
+miss_var_summary(all_states_data)
+
+# Example output:
+# A tibble: 271 × 3
+#   variable        n_miss  pct_miss
+#   <chr>            <int>     <dbl>
+# 1 ZRI_AllHomes_CondoCoop 149463  79.2
+# 2 ZRI_AllHomes_DuplexTriplex  142137  75.3
+# ...
+```
+
+
+### References
+
+::: {#refs}
+:::
