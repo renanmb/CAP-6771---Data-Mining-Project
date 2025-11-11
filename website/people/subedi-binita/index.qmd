@@ -1,0 +1,34 @@
+---
+title: &TITLE Binita Subedi
+first: Binita
+last: Subedi
+people_group: gradstudent
+education: MSC Cyber Security | University of West Florida
+email: "bs174@students.uwf.edu"
+subtitle: Graduate Student, Masters Cyber Security
+image: binita.jpg
+page-layout: full
+about: 
+  id: about
+  template: trestles
+  image-shape: round
+  image: binita.jpg
+  links:
+    - icon: envelope
+      text: Email
+      href: mailto:bs174@students.uwf.edu"
+---
+
+<hr>
+
+
+:::{#about}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## Education
+{{< meta education >}}
+
+<br>
+
+
