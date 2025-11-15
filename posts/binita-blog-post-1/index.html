@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Binita Subedi">
-<meta name="description" content="First post for course CAP-6771 (Fall 2025)">
+<meta name="description" content="Adding Binning to dataset to decrease Granularity">
 
-<title>Welcome to the Project – CAP-6771 - Data-Mining Project (Fall-2025)</title>
+<title>Adding Binning – CAP-6771 - Data-Mining Project (Fall-2025)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -363,7 +363,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Welcome to the Project</h1>
+<h1 class="title">Adding Binning</h1>
   <div class="quarto-categories">
     <div class="quarto-category">binita</div>
   </div>
@@ -371,7 +371,7 @@ div.csl-indent {
 
 <div>
   <div class="description">
-    First post for course CAP-6771 (Fall 2025)
+    Adding Binning to dataset to decrease Granularity
   </div>
 </div>
 
@@ -401,10 +401,18 @@ div.csl-indent {
 </header>
 
 
-<p>For this class setup a website to present the project</p>
+<p>On this exploratory phase I will be adding binning to handle with the granularity and hierarchy of the dataset.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>This Project is explained on Quarto/R Markdown code. The loaded dataset finds the root on Git repository and constructs the path to the datasets folder and the CSV file. It then loads the CSV into a data frame called all_states_data. A data frame all_states_data The project contains a data frame all_states_data with 13,212 rows and 82 columns. Time series analysis packages (including tsibble, feasts, fable): fpp3 Data manipulation and cleaning: dplyr, tidyr Plotting: ggplot2 Extends ggplot2 for time series plots: ggtime Combine multiple ggplots: patchwork</p>
+<p>This Project is explained on Quarto/R Markdown code.</p>
+<p>The loaded dataset finds the root on Git repository and constructs the path to the datasets folder and the CSV file.</p>
+<p>It then loads the CSV into a data frame called all_states_data. A data frame all_states_data</p>
+<p>The project contains a data frame all_states_data with 13,212 rows and 82 columns.</p>
+<p>Time series analysis packages (including tsibble, feasts, fable): fpp3</p>
+<p>Data manipulation and cleaning: dplyr, tidyr</p>
+<p>Plotting: ggplot2</p>
+<p>Extends ggplot2 for time series plots: ggtime</p>
+<p>Combine multiple ggplots: patchwork</p>
 </section>
 <section id="load-packages" class="level2">
 <h2 class="anchored" data-anchor-id="load-packages">1. Load packages</h2>
@@ -539,7 +547,13 @@ div.csl-indent {
  $ Zri_SingleFamilyResidenceRental                              : int  NA NA NA NA NA NA NA NA NA NA ...</code></pre>
 </div>
 </div>
-<p>We convert the Date column to proper Date type so it can be used in time series analysis. str() shows structure: column names, types, and example data. Output: Data column is Data type. Other column include RegionName, ZHVI_AllHomes, and many Zillow metrics.</p>
+<p>We convert the Date column to proper Date type so it can be used in time series analysis.</p>
+<p><strong>str() shows structure:</strong> column names, types, and example data.</p>
+<p><strong>Output:</strong></p>
+<ul>
+<li>Data column is Data type.</li>
+<li>Other column include RegionName, ZHVI_AllHomes, and many Zillow metrics.</li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to tsibble for time series analysis</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'State' is a column and 'Value' is the metric</span></span>
@@ -549,7 +563,13 @@ div.csl-indent {
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>state_tsibble <span class="ot">&lt;-</span> all_states_data <span class="sc">%&gt;%</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">as_tsibble</span>(<span class="at">key =</span> RegionName, <span class="at">index =</span> Date)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>We convert the data frame into a tsibble (time series tibble) key = RegionName: each state is treated as a seperate time series index = Date:the date column is the time index. Output: state_tsibble is now a tsibble with 13,212 rows and 82 columns, ready for time series operations.</p>
+<p>We convert the data frame into a tsibble (time series tibble)</p>
+<ul>
+<li>key = RegionName: each state is treated as a seperate time series</li>
+<li>index = Date:the date column is the time index.</li>
+</ul>
+<p><strong>Output:</strong></p>
+<p><strong>state_tsibble</strong> is now a tsibble with 13,212 rows and 82 columns, ready for time series operations.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect first rows</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>state_tsibble <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -599,7 +619,9 @@ div.csl-indent {
 6 1996 Sep           101998.</code></pre>
 </div>
 </div>
-<p>index_by(Month = yearmonth(Date)): groups the data by month. summarise(Avg_ZHVI_AllHomes = mean(…)): calculates the average zillow home Value Index (ZHVI) per month. na.rm = TRUE: ignores missing values.</p>
+<p>index_by(Month = yearmonth(Date)): groups the data by month.</p>
+<p>summarise(Avg_ZHVI_AllHomes = mean(…)): calculates the average zillow home Value Index (ZHVI) per month.</p>
+<p>na.rm = TRUE: ignores missing values.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quarterly aggregation example</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>quarterly_binned <span class="ot">&lt;-</span> state_tsibble <span class="sc">%&gt;%</span></span>
@@ -633,7 +655,9 @@ div.csl-indent {
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span>                    <span class="co"># convert to tibble</span></span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Month =</span> <span class="fu">as.Date</span>(Month))     <span class="co"># convert yearmonth to Date</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>We convert the monthly_binned tsibble into a regular tibble. Also, convert Month from yearmonth to a standard Date for ggplot. The output monthly_binned_df has two columns: Month (Date) and Avg_ZHVI_AllHomes</p>
+<p>We convert the monthly_binned tsibble into a regular tibble.</p>
+<p>Also, convert Month from yearmonth to a standard Date for ggplot.</p>
+<p>The output monthly_binned_df has two columns: Month (Date) and Avg_ZHVI_AllHomes</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot with ggplot</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(monthly_binned_df, <span class="fu">aes</span>(<span class="at">x =</span> Month, <span class="at">y =</span> Avg_ZHVI_AllHomes)) <span class="sc">+</span></span>
@@ -650,7 +674,15 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p>We plot a line chart of monthly average home values x = Month, Y = Avg_ZHVI_AllHomes geom_line(color = “blie”): draws the line in blue. also, rotates x-axis labels for readability. A line graph shows trends in average home prices per month over time. Peaks and troughs indicate periods of rising/falling home prices.</p>
+<p>We plot a line chart of monthly average home values</p>
+<ul>
+<li>x = Month,</li>
+<li>Y = Avg_ZHVI_AllHomes</li>
+</ul>
+<p>geom_line(color = “blue”): draws the line in blue.</p>
+<p>also, rotates x-axis labels for readability.</p>
+<p>A line graph shows trends in average home prices per month over time.</p>
+<p>Peaks and troughs indicate periods of rising/falling home prices.</p>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <div id="refs" role="list">
