@@ -1,6 +1,6 @@
 ---
-title: "Welcome to the Project"
-description: "First post for course CAP-6771 (Fall 2025)"
+title: "Adding Binning"
+description: "Adding Binning to dataset to decrease Granularity"
 author:
   - name: Binita Subedi
     url: https://github.com/Binita-subedi
@@ -16,18 +16,27 @@ bibliography: references.bib
 link-citations: true
 ---
 
-For this class setup a website to present the project
+On this exploratory phase I will be adding binning to handle with the granularity and hierarchy of the dataset.
 
 
 ## Introduction
+
 This Project is explained on Quarto/R Markdown code. 
+
 The loaded dataset finds the root on Git repository and constructs the path to the datasets folder and the CSV file. 
+
 It then loads the CSV into a data frame called all_states_data. A data frame all_states_data
+
 The project contains a data frame all_states_data with 13,212 rows and 82 columns.
+
 Time series analysis packages (including tsibble, feasts, fable): fpp3
+
 Data manipulation and cleaning: dplyr, tidyr
+
 Plotting: ggplot2
+
 Extends ggplot2 for time series plots: ggtime
+
 Combine multiple ggplots: patchwork
 
 ## 1. Load packages
@@ -69,6 +78,7 @@ all_states_data <- read.csv(state_time_series)
 ```
 
 ## 3. Exploring Data
+
 Let's convert Data column to Data type
 
 ```{r}
@@ -83,10 +93,13 @@ str(all_states_data)
 ```
 
 We convert the Date column to proper Date type so it can be used in time series analysis. 
-str() shows structure: column names, types, and example data.
-Output:
-Data column is Data type.
-Other column include RegionName, ZHVI_AllHomes, and many Zillow metrics.
+
+**str() shows structure:** column names, types, and example data.
+
+**Output:**
+
+- Data column is Data type.
+- Other column include RegionName, ZHVI_AllHomes, and many Zillow metrics.
 
 ```{r}
 # Convert to tsibble for time series analysis
@@ -99,10 +112,13 @@ as_tsibble(key = RegionName, index = Date)
 ```
 
 We convert the data frame into a tsibble (time series tibble)
-key = RegionName: each state is treated as a seperate time series
-index = Date:the date column is the time index.
-Output:
-state_tsibble is now a tsibble with 13,212 rows and 82 columns, ready for time series operations.
+
+- key = RegionName: each state is treated as a seperate time series
+- index = Date:the date column is the time index.
+
+**Output:**
+
+**state_tsibble** is now a tsibble with 13,212 rows and 82 columns, ready for time series operations.
 
 ```{r}
 # Inspect first rows
@@ -125,7 +141,9 @@ monthly_binned %>% head()
 ```
 
 index_by(Month = yearmonth(Date)): groups the data by month.
+
 summarise(Avg_ZHVI_AllHomes = mean(...)): calculates the average zillow home Value Index (ZHVI) per month.
+
 na.rm = TRUE: ignores missing values.
 
 ```{r}
@@ -154,7 +172,9 @@ monthly_binned_df <- monthly_binned %>%
 ```
 
 We convert the monthly_binned tsibble into a regular tibble.
+
 Also, convert Month from yearmonth to a standard Date for ggplot.
+
 The output monthly_binned_df has two columns: Month (Date) and Avg_ZHVI_AllHomes
 
 ```{r}
@@ -168,10 +188,16 @@ ggplot(monthly_binned_df, aes(x = Month, y = Avg_ZHVI_AllHomes)) +
 ```
 
 We plot a line chart of monthly average home values
-x = Month, Y = Avg_ZHVI_AllHomes
-geom_line(color = "blie"): draws the line in blue.
+
+- x = Month, 
+- Y = Avg_ZHVI_AllHomes
+
+geom_line(color = "blue"): draws the line in blue.
+
 also, rotates x-axis labels for readability.
+
 A line graph shows trends in average home prices per month over time.
+
 Peaks and troughs indicate periods of rising/falling home prices.
 
 ### References
