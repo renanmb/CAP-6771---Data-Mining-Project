@@ -1,0 +1,180 @@
+---
+title: "Welcome to the Project"
+description: "First post for course CAP-6771 (Fall 2025)"
+author:
+  - name: Binita Subedi
+    url: https://github.com/Binita-subedi
+    affiliation: Master of Cyber Security Program @ The University of West Florida (UWF)
+    # affiliation-url: https://ucsb-meds.github.io/
+# date: 10-24-2022
+categories: [binita]
+# citation:
+#   url: https://samanthacsik.github.io/posts/2022-10-24-my-blog-post/
+image: images/binita.jpg
+draft: false
+bibliography: references.bib
+link-citations: true
+---
+
+For this class setup a website to present the project
+
+
+## Introduction
+This Project is explained on Quarto/R Markdown code. 
+The loaded dataset finds the root on Git repository and constructs the path to the datasets folder and the CSV file. 
+It then loads the CSV into a data frame called all_states_data. A data frame all_states_data
+The project contains a data frame all_states_data with 13,212 rows and 82 columns.
+Time series analysis packages (including tsibble, feasts, fable): fpp3
+Data manipulation and cleaning: dplyr, tidyr
+Plotting: ggplot2
+Extends ggplot2 for time series plots: ggtime
+Combine multiple ggplots: patchwork
+
+## 1. Load packages
+
+```{r}
+#| output: false
+
+# install.packages("fpp3")
+library(fpp3)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggtime)
+library(patchwork)
+```
+
+## 2. Load the Dataset
+
+The following code will locate the folder **datasets** and then it will give back the variable **datasets_path** which you can use to build the path to the desired data to be loaded.
+
+```{r}
+#| code-fold: true
+#| output: false
+find_git_root <- function(start = getwd()) {
+  path <- normalizePath(start, winslash = "/", mustWork = TRUE)
+  while (path != dirname(path)) {
+    if (dir.exists(file.path(path, ".git"))) return(path)
+    path <- dirname(path)
+  }
+  stop("No .git directory found — are you inside a Git repository?")
+}
+
+repo_root <- find_git_root()
+datasets_path <- file.path(repo_root, "datasets")
+zillow_economics_data_path <- file.path(datasets_path, "zillow-economics-data-01")
+
+state_time_series <- file.path(zillow_economics_data_path, "State_time_series.csv")
+all_states_data <- read.csv(state_time_series)
+```
+
+## 3. Exploring Data
+Let's convert Data column to Data type
+
+```{r}
+# convert data column to Data type
+all_states_data <- all_states_data %>%
+mutate(Date = as.Date(Date, format = "%Y-%m-%d"))
+```
+
+```{r}
+# Check the structure
+str(all_states_data)
+```
+
+We convert the Date column to proper Date type so it can be used in time series analysis. 
+str() shows structure: column names, types, and example data.
+Output:
+Data column is Data type.
+Other column include RegionName, ZHVI_AllHomes, and many Zillow metrics.
+
+```{r}
+# Convert to tsibble for time series analysis
+# Assuming 'State' is a column and 'Value' is the metric
+
+library(tsibble)
+
+state_tsibble <- all_states_data %>%
+as_tsibble(key = RegionName, index = Date)
+```
+
+We convert the data frame into a tsibble (time series tibble)
+key = RegionName: each state is treated as a seperate time series
+index = Date:the date column is the time index.
+Output:
+state_tsibble is now a tsibble with 13,212 rows and 82 columns, ready for time series operations.
+
+```{r}
+# Inspect first rows
+state_tsibble %>% head()
+```
+
+## 4. Binning Time series Data
+
+```{r}
+# Monthly aggregation (mean per month)
+library(dplyr)
+library(ggtime)
+library(tsibble)
+
+monthly_binned <- state_tsibble %>%
+index_by(Month = yearmonth(Date)) %>%
+summarise(Avg_ZHVI_AllHomes = mean(ZHVI_AllHomes, na.rm = TRUE))
+
+monthly_binned %>% head()
+```
+
+index_by(Month = yearmonth(Date)): groups the data by month.
+summarise(Avg_ZHVI_AllHomes = mean(...)): calculates the average zillow home Value Index (ZHVI) per month.
+na.rm = TRUE: ignores missing values.
+
+```{r}
+# Quarterly aggregation example
+quarterly_binned <- state_tsibble %>%
+  index_by(Quarter = yearquarter(Date)) %>%
+  summarise(Avg_ZHVI_AllHomes = mean(ZHVI_AllHomes, na.rm = TRUE))
+
+quarterly_binned %>% head()
+```
+
+The output is same as monthly aggregation, but grouped by quarter instead of month. 
+
+```{r}
+# Plot binned data
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(tsibble)
+library(ggtime)
+
+# Convert Month to a regular Date (first day of the month)
+monthly_binned_df <- monthly_binned %>%
+  as_tibble() %>%                    # convert to tibble
+  mutate(Month = as.Date(Month))     # convert yearmonth to Date
+```
+
+We convert the monthly_binned tsibble into a regular tibble.
+Also, convert Month from yearmonth to a standard Date for ggplot.
+The output monthly_binned_df has two columns: Month (Date) and Avg_ZHVI_AllHomes
+
+```{r}
+# Plot with ggplot
+ggplot(monthly_binned_df, aes(x = Month, y = Avg_ZHVI_AllHomes)) +
+  geom_line(color = "blue") +
+  labs(title = "Monthly Binned Average of ZHVI_AllHomes",
+       x = "Month", y = "Average ZHVI_AllHomes") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+We plot a line chart of monthly average home values
+x = Month, Y = Avg_ZHVI_AllHomes
+geom_line(color = "blie"): draws the line in blue.
+also, rotates x-axis labels for readability.
+A line graph shows trends in average home prices per month over time.
+Peaks and troughs indicate periods of rising/falling home prices.
+
+### References
+
+::: {#refs}
+:::
