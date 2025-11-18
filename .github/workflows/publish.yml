@@ -39,37 +39,37 @@ jobs:
         with:
           r-version: '4.5.1'
       # Dealing with System Dependencies
-      # - name: Create user R library
-      #   run: mkdir -p $R_LIBS_USER
+      - name: Create user R library
+        run: mkdir -p $R_LIBS_USER
       
-      # - name: Install getsysreqs
-      #   run: |
-      #     Rscript -e "install.packages('remotes', repos='https://cloud.r-project.org')"
-      #     Rscript -e ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths())); remotes::install_github('mdneuzerling/getsysreqs')"
-      #     Rscript -e ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths())); library(getsysreqs); packageVersion('getsysreqs')"
+      - name: Install getsysreqs
+        run: |
+          Rscript -e "install.packages('remotes', repos='https://cloud.r-project.org')"
+          Rscript -e ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths())); remotes::install_github('mdneuzerling/getsysreqs')"
+          Rscript -e ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths())); library(getsysreqs); packageVersion('getsysreqs')"
 
-      # - name: Install getsysreqs and dependencies
-      #   run: |
-      #     install.packages("remotes")
-      #     remotes::install_github("mdneuzerling/getsysreqs")
-      #   shell: Rscript {0}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install getsysreqs and dependencies
+        run: |
+          install.packages("remotes")
+          remotes::install_github("mdneuzerling/getsysreqs")
+        shell: Rscript {0}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Install system dependencies
-      #   run: |
-      #     Rscript -e ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths())); \
-      #       sysreqs <- getsysreqs::get_sysreqs('website/renv.lock', distribution='ubuntu', release='22.04'); \
-      #       cat(sysreqs)"
-      #     sysreqs=$(Rscript -e ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths())); cat(getsysreqs::get_sysreqs('website/renv.lock', distribution='ubuntu', release='22.04'))")
-      #     if [ ! -z "$sysreqs" ]; then
-      #       echo "Installing system requirements: $sysreqs"
-      #       sudo apt-get update -y
-      #       sudo apt-get install -y --no-install-recommends $sysreqs
-      #     else
-      #       echo "No system requirements found."
-      #     fi
-      #   shell: bash
+      - name: Install system dependencies
+        run: |
+          Rscript -e ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths())); \
+            sysreqs <- getsysreqs::get_sysreqs('website/renv.lock', distribution='ubuntu', release='22.04'); \
+            cat(sysreqs)"
+          sysreqs=$(Rscript -e ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths())); cat(getsysreqs::get_sysreqs('website/renv.lock', distribution='ubuntu', release='22.04'))")
+          if [ ! -z "$sysreqs" ]; then
+            echo "Installing system requirements: $sysreqs"
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends $sysreqs
+          else
+            echo "No system requirements found."
+          fi
+        shell: bash
 
       # Need to setup to use RENV
       - name: Setup RENV
@@ -82,6 +82,7 @@ jobs:
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
-          path: website
+          path: . # website
+          working-directory: website
         # env:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
