@@ -139,7 +139,7 @@ bibliography: references.bib
 ---
 ```
 
-3. Cite in your text using the BibTeX key: [@key] (e.g., [@smith2023]).
+3. Cite in your text using the BibTeX key: [@key] (e.g., [@Liu_2021]).
 
 Example:
 
