@@ -132,6 +132,18 @@ na_summary <- all_states_data %>%
 print(na_summary)
 ```
 
+Sample of the Dataset in the form of a data table to make visually clear how the dataset looks like and what features are available.
+
+```{r}
+print("all_states_data (tsibble):")
+DT::datatable(all_states_data, options = list(pageLength = 5))
+```
+
+```{r}
+library(skimr)
+skim(all_states_data)
+```
+
 <!-- 
 ⣿⣿⡇⢩⠘⣴⣿⣥⣤⢦⢁⠄⠉⡄⡇⠛⠛⠛⢛⣭⣾⣿⣿⡏
 ⣿⣿⣿⡇⠹⢇⡹⣿⣿⣛⣓⣿⡿⠞⠑⣱⠄⢀⣴⣿⣿⣿⣿⡟
@@ -335,6 +347,113 @@ DT::datatable(cali_ts_monthly, options = list(pageLength = 5))
 ⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠑⣿⣮⣝⣛⠿⠿⣿⣿⣿⣿⠄
 ⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄
 -->
+
+
+<!-- TODO -->
+
+Reflecting on how the ZHVI is calculated and how it compares to other ways to calculate Home value index like: Case-Shiller
+
+The Standard & Poor's CoreLogic Case–Shiller Home Price Indices are repeat-sales house price indices for the United States.
+
+[FipeZAP Index](https://downloads.fipe.org.br/indices/fipezap/metodologia/FipeZap%20Index%20-%20Methodology%20v20110216.pdf) 
+
+
+
+**Conceptual Accuracy (What it gets right)**
+
+The R code correctly captures the concept of measuring the middle-third of the market:
+
+Focus on the Middle Tier: The core idea of calculating the ZHVI is to use an aggressively trimmed mean—specifically the mean of values between the 35th and 65th percentile. The code successfully identifies these cut-off points ($\mathbf{q35}$ and $\mathbf{q65}$) and calculates the mean of the values within that range. This properly simulates the "robust" nature of the ZHVI, which aims to exclude extreme high-end and low-end sales that might skew a simple median or average.
+
+**Major Flaws (What it gets wrong)**
+
+1. The Data Source is Incorrect (Sales vs. All Homes)
+
+* **Your Code's Flaw:** The input data, hypothetical_sales, is a list of sales transactions.
+
+* **Actual ZHVI Method:** The ZHVI is calculated using the Zestimate for every single home (over 100 million properties), not just the few that sold in a given month.
+  * **Impact:** Indices based on sales (like **Case-Shiller**) are susceptible to the compositional bias of which homes happen to sell that month. The ZHVI avoids this by including the estimated value (Zestimate) for all homes, providing a much more comprehensive view of the entire market's value, whether a house sold or not.
+
+2. It Calculates a Static Value, Not Appreciation
+
+* **Your Code's Flaw:** The output, **simulated_zhvi**, is a single-month dollar value.
+
+* **Actual ZHVI Method:** The ZHVI is an **index** that tracks the change in home values over time (appreciation). It is a chained index where the monthly value is determined by:
+
+  1. Calculating the weighted mean appreciation of individual Zestimates from the prior month to the current month.
+
+  2. Applying that appreciation rate to the ZHVI level from the prior month.
+
+  * **Impact:** To calculate a correct ZHVI, you would need two separate sets of Zestimates (Time $t-1$ and Time $t$), calculate the percentage change for each home, and then average those changes to determine the appreciation factor for the overall index. The code calculates a robust mean, but it doesn't show how that mean changes month-over-month to create the index.
+
+**Hypothetical Fix for Flaw 2 (Conceptual only)**
+
+A conceptually more accurate approach would require comparing two months:
+1. Month 1 Zestimates (t-1): Calculate the $\text{Mean}_{35-65}$ of Zestimates for Month 1.
+
+2. Month 2 Zestimates (t): Calculate the $\text{Mean}_{35-65}$ of Zestimates for Month 2.
+
+3. Appreciation:
+
+$$\text{Monthly Appreciation} = \frac{\text{Mean}_{35-65}(t)}{\text{Mean}_{35-65}(t-1)} - 1$$
+
+4. ZHVI Calculation: $\text{ZHVI}(t) = \text{ZHVI}(t-1) \times (1 + \text{Monthly Appreciation})$
+
+
+
+```{r}
+# this seems to be incorrect
+
+# 1. Create a hypothetical set of 100 home sales.
+# We'll use random numbers for this example.
+set.seed(42) # Makes our "random" numbers reproducible
+hypothetical_sales <- round(rnorm(100, mean = 350000, sd = 75000))
+
+# 2. Find the 35th and 65th percentile values
+# These are the "cut-off" points.
+q35 <- quantile(hypothetical_sales, 0.35)
+q65 <- quantile(hypothetical_sales, 0.65)
+
+# 3. Filter to get only the "middle-tier" homes
+# (i.e., homes with a value between the 35th and 65th percentile)
+middle_tier_homes <- hypothetical_sales[
+  hypothetical_sales >= q35 & hypothetical_sales <= q65
+]
+
+# 4. Calculate the "Simulated ZHVI"
+# This is the mean of only those middle-tier homes.
+simulated_zhvi <- mean(middle_tier_homes)
+
+# --- Print the results ---
+print(paste("Total number of hypothetical sales:", length(hypothetical_sales)))
+print(paste("35th Percentile Value:", q35))
+print(paste("65th Percentile Value:", q65))
+
+print(paste("Number of homes in middle-tier (35th-65th percentile):", length(middle_tier_homes)))
+print(paste("Simulated ZHVI (Mean of middle-tier):", round(simulated_zhvi, 2)))
+```
+
+
+ZHVI is probably being calculated from most likely the sales data that generated the MedianListingPrice_AllHomes.
+
+MedianListingPrice_1Bedroom	
+
+MedianListingPrice_2Bedroom
+
+MedianListingPrice_3Bedroom	
+
+MedianListingPrice_4Bedroom	
+
+MedianListingPrice_5BedroomOrMore	
+
+MedianListingPrice_AllHomes	
+
+MedianListingPrice_CondoCoop	
+
+MedianListingPrice_DuplexTriplex	
+
+MedianListingPrice_SingleFamilyResidence
+
 
 
 ### References
