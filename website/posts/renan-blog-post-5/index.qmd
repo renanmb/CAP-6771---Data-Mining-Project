@@ -35,9 +35,9 @@ lapply(packages, library, character.only = TRUE)
 ```
 
 
-## 2. Load the Dataset
+## 1.1. Load the Dataset
 
-The following code will locate the folder **datasets** and then it will give back the variable **datasets_path** which you can use to build the path to the desired data to be loaded.
+The code below automates loading the datasets from the folder **datasets** located at the root of the github repository. We will be loading the datasets **analysis1.sas7bdat** and **analysis2.sas7bdat**.
 
 ```{r}
 #| code-fold: true
@@ -61,19 +61,67 @@ jhs_analysis1 <- read.sas7bdat(jhs_analysis1_path)
 jhs_analysis2 <- read.sas7bdat(jhs_analysis2_path)
 ```
 
-## 3. Data Exploration
+## 2. Data Exploration and Processing
 
-Listing all the attributes in the Dataset:
+In this section which is intended for the **Project 1** assignment we will be exploring the dataset and processing it to extract the most relevant Attributes.
+
+## 2.1. Dataset Features
+
+The Jackson Heart Study (JHS) has a [JHS Variable Explorer](https://jacksonheartstudy.umc.edu/vizio/JHS-VariablesExpo.html) which helps to explore all the available variables, its characteristics, data types and the structure as some variables have extensive contextual information about they were obtained and their associated study.
+
+The objects **jhs_analysis1_variables** and **jhs_analysis2_variables** have the individual features and I found useful when I need to quickly check if my variable is available.
 
 ```{r}
-knitr::kable(data.frame(Feature = names(health_data)))
+# Listing all the attributes in the Dataset
+# making a datatable is too slow and inneficient
+# DT::datatable(jhs_analysis1, options = list(pageLength = 5))
+# DT::datatable(jhs_analysis2, options = list(pageLength = 5))
+jhs_analysis1_variables = knitr::kable(data.frame(Feature = names(jhs_analysis1)))
+jhs_analysis2_variables = knitr::kable(data.frame(Feature = names(jhs_analysis2)))
 ```
 
-Below we use the Skimr package to check things like NAs, categorical vs numeric variables
+Comparisson side by side of all the available variables in both Datasets.
 
 ```{r}
-skim(health_data)
+# Extract variable names as vectors
+vars1 <- names(jhs_analysis1)
+vars2 <- names(jhs_analysis2)
+
+# Compare variable names
+common_vars <- intersect(vars1, vars2)
+only_in_analysis1 <- setdiff(vars1, vars2)
+only_in_analysis2 <- setdiff(vars2, vars1)
+
+# Create comparison table
+comparison <- data.frame(
+  Variable = union(vars1, vars2),
+  In_Analysis1 = union(vars1, vars2) %in% vars1,
+  In_Analysis2 = union(vars1, vars2) %in% vars2
+)
+
+knitr::kable(comparison, caption = "Variable Comparison Between Datasets")
 ```
+
+
+
+### 2.1.1. Dataset 1 jhs_analysis1 Data Summary
+
+Below we use the Skimr package to create a more extension Data Summary of **jhs_analysis1**
+
+```{r}
+skim(jhs_analysis1)
+```
+
+
+### 2.1.2. Dataset 2 jhs_analysis2 Data Summary
+
+Below we use the Skimr package to create a more extension Data Summary of **jhs_analysis2**
+
+```{r}
+skim(jhs_analysis2)
+```
+
+## 2.2. Data Processing
 
 Below we there is a summary showing a significant ammount of NAs in 3 numerical variables
 
@@ -106,11 +154,10 @@ na_summary <- health_data %>%
 print(na_summary)
 ```
 
-Sample of the Dataset in the form of a data table to make visually clear how the dataset looks like and what features are available.
 
 ```{r}
-print("all_states_data (tsibble):")
-DT::datatable(health_data, options = list(pageLength = 5))
+keeps <- c("HbA1c" , "age", "waist","BPmeds", "everSmoker", "currentSmoker")
+jhs_data <- jhs_analysis1 %>% select(all_of(keeps)) %>% na.omit()
 ```
 
 
