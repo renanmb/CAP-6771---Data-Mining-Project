@@ -1,0 +1,229 @@
+---
+title: "Health Risk Dataset"
+description: "Switched datasets so in this project will be replicating all assingments"
+author:
+  - name: Renan monteiro barbosa
+    url: https://github.com/renanmb
+    affiliation: Master of Data Science Program @ The University of West Florida (UWF)
+    # affiliation-url: https://ucsb-meds.github.io/
+# date: 10-24-2022
+categories: [renan]
+# citation:
+#   url: https://samanthacsik.github.io/posts/2022-10-24-my-blog-post/
+image: images/spongebob-imagination.jpg
+draft: false
+bibliography: references.bib
+link-citations: true
+---
+
+The Dataset [Healthcare Risk Factors Dataset](https://www.kaggle.com/datasets/abdallaahmed77/healthcare-risk-factors-dataset) can be downloaded:
+
+```{{bash}}
+#!/bin/bash
+curl -L -o ~/Downloads/healthcare-risk-factors-dataset.zip\
+  https://www.kaggle.com/api/v1/datasets/download/abdallaahmed77/healthcare-risk-factors-dataset
+```
+
+
+## 1. Introduction
+
+
+<!-- TODO Notes -->
+
+
+### 1.1 Load packages
+
+```{r}
+#| output: false
+
+# install.packages("fpp3")
+library(fpp3)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggtime)
+library(patchwork)
+library(DT)
+library(skimr)
+```
+
+
+## 2. Load the Dataset
+
+The following code will locate the folder **datasets** and then it will give back the variable **datasets_path** which you can use to build the path to the desired data to be loaded.
+
+```{r}
+#| code-fold: true
+#| output: false
+find_git_root <- function(start = getwd()) {
+  path <- normalizePath(start, winslash = "/", mustWork = TRUE)
+  while (path != dirname(path)) {
+    if (dir.exists(file.path(path, ".git"))) return(path)
+    path <- dirname(path)
+  }
+  stop("No .git directory found — are you inside a Git repository?")
+}
+
+repo_root <- find_git_root()
+datasets_path <- file.path(repo_root, "datasets")
+health_data_path <- file.path(datasets_path, "health-risk-data")
+
+dirty_v3_path <- file.path(health_data_path, "dirty_v3_path.csv")
+health_data <- read.csv(dirty_v3_path)
+```
+
+## 3. Data Exploration
+
+Listing all the attributes in the Dataset:
+
+```{r}
+knitr::kable(data.frame(Feature = names(health_data)))
+```
+
+Below we use the Skimr package to check things like NAs, categorical vs numeric variables
+
+```{r}
+skim(health_data)
+```
+
+Below we there is a summary showing a significant ammount of NAs in 3 numerical variables
+
+```{r}
+#| code-fold: true
+
+# Get the total number of rows for calculating percentages
+total_rows <- nrow(health_data)
+
+# Create a pretty summary table
+na_summary <- health_data %>%
+  # 1. Count NAs for every column
+  summarise(across(everything(), ~sum(is.na(.)))) %>%
+  
+  # 2. Pivot the data from wide to long
+  pivot_longer(everything(),
+               names_to = "Column",
+               values_to = "NA_Count") %>%
+  
+  # 3. (Optional) Filter to only show columns that HAVE NAs
+  filter(NA_Count > 0) %>%
+  
+  # 4. (Optional) Add a percentage column
+  mutate(NA_Percentage = (NA_Count / total_rows) * 100) %>%
+
+  # 5. Sort by the highest NA count
+  arrange(desc(NA_Count))
+
+# Print the clean table
+print(na_summary)
+```
+
+Sample of the Dataset in the form of a data table to make visually clear how the dataset looks like and what features are available.
+
+```{r}
+print("all_states_data (tsibble):")
+DT::datatable(health_data, options = list(pageLength = 5))
+```
+
+
+<!-- 
+⣿⣿⡇⢩⠘⣴⣿⣥⣤⢦⢁⠄⠉⡄⡇⠛⠛⠛⢛⣭⣾⣿⣿⡏
+⣿⣿⣿⡇⠹⢇⡹⣿⣿⣛⣓⣿⡿⠞⠑⣱⠄⢀⣴⣿⣿⣿⣿⡟
+⣿⣿⣿⣧⣸⡄⣿⣪⡻⣿⠿⠋⠄⠄⣀⣀⢡⣿⣿⣿⣿⡿⠋
+⠘⣿⣿⣿⣿⣷⣭⣓⡽⡆⡄⢀⣤⣾⣿⣿⣿⣿⣿⡿⠋
+⠄⢨⡻⡇⣿⢿⣿⣿⣭⡶⣿⣿⣿⣜⢿⡇⡿⠟⠉
+⠄⠸⣷⡅⣫⣾⣿⣿⣿⣷⣙⢿⣿⣿⣷⣦⣚⡀
+⠄⠄⢉⣾⡟⠙⠶⠖⠈⢻⣿⣷⣅⢻⣿⣿⣿⣿⣿⣶⣶⡆⠄⣤⡀
+⠄⢠⣿⣿⣧⣀⣀⣀⣀⣼⣿⣿⣿⡎⢿⣿⣿⣿⣿⣿⣿⣇⠄⠈⠁
+⠄⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢇⣎⢿⣿⣿⣿⣿⣿⣿⣿⣶⣶
+⠄⠄⠻⢿⣿⣿⣿⣿⣿⣿⣿⢟⣫⣾⣿⣷⡹⣿⣿⣿⣿⣿⣿⣿⡟
+⠄⠄⠄⠄⢮⣭⣍⡭⣭⡵⣾⣿⣿⣿⡎⣿⣿⣌⠻⠿⠿⠿⠟⠋
+⠄⠄⠄⠄⠈⠻⣿⣿⣿⣿⣹⣿⣿⣿⡇⣿⣿⡿
+⠄⠄⣀⣴⣾⣶⡞⣿⣿⣿⣿⣿⣿⣿⣾⣿⡿ 
+-->
+
+
+## 4. Data Preprocessing and Cleaning
+
+
+
+<!-- 
+⣿⣿⡇⢩⠘⣴⣿⣥⣤⢦⢁⠄⠉⡄⡇⠛⠛⠛⢛⣭⣾⣿⣿⡏
+⣿⣿⣿⡇⠹⢇⡹⣿⣿⣛⣓⣿⡿⠞⠑⣱⠄⢀⣴⣿⣿⣿⣿⡟
+⣿⣿⣿⣧⣸⡄⣿⣪⡻⣿⠿⠋⠄⠄⣀⣀⢡⣿⣿⣿⣿⡿⠋
+⠘⣿⣿⣿⣿⣷⣭⣓⡽⡆⡄⢀⣤⣾⣿⣿⣿⣿⣿⡿⠋
+⠄⢨⡻⡇⣿⢿⣿⣿⣭⡶⣿⣿⣿⣜⢿⡇⡿⠟⠉
+⠄⠸⣷⡅⣫⣾⣿⣿⣿⣷⣙⢿⣿⣿⣷⣦⣚⡀
+⠄⠄⢉⣾⡟⠙⠶⠖⠈⢻⣿⣷⣅⢻⣿⣿⣿⣿⣿⣶⣶⡆⠄⣤⡀
+⠄⢠⣿⣿⣧⣀⣀⣀⣀⣼⣿⣿⣿⡎⢿⣿⣿⣿⣿⣿⣿⣇⠄⠈⠁
+⠄⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢇⣎⢿⣿⣿⣿⣿⣿⣿⣿⣶⣶
+⠄⠄⠻⢿⣿⣿⣿⣿⣿⣿⣿⢟⣫⣾⣿⣷⡹⣿⣿⣿⣿⣿⣿⣿⡟
+⠄⠄⠄⠄⢮⣭⣍⡭⣭⡵⣾⣿⣿⣿⡎⣿⣿⣌⠻⠿⠿⠿⠟⠋
+⠄⠄⠄⠄⠈⠻⣿⣿⣿⣿⣹⣿⣿⣿⡇⣿⣿⡿
+⠄⠄⣀⣴⣾⣶⡞⣿⣿⣿⣿⣿⣿⣿⣾⣿⡿ 
+-->
+
+## 5. Determination of Relevant Variables
+
+The outcome of risk must be defined as a target variable in order to determine the most relevant variables related to healthcare risks.
+
+
+
+### 5.1 Define a Target Variable
+
+
+
+### 5.2 Feature Selection Methodology
+
+
+<!-- 
+⠄⠄⣿⣿⣿⣿⠘⡿⢛⣿⣿⣿⣿⣿⣧⢻⣿⣿⠃⠸⣿⣿⣿⠄⠄⠄⠄⠄
+⠄⠄⣿⣿⣿⣿⢀⠼⣛⣛⣭⢭⣟⣛⣛⣛⠿⠿⢆⡠⢿⣿⣿⠄⠄⠄⠄⠄
+⠄⠄⠸⣿⣿⢣⢶⣟⣿⣖⣿⣷⣻⣮⡿⣽⣿⣻⣖⣶⣤⣭⡉⠄⠄⠄⠄⠄
+⠄⠄⠄⢹⠣⣛⣣⣭⣭⣭⣁⡛⠻⢽⣿⣿⣿⣿⢻⣿⣿⣿⣽⡧⡄⠄⠄⠄
+⠄⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣶⣌⡛⢿⣽⢘⣿⣷⣿⡻⠏⣛⣀⠄⠄
+⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠙⡅⣿⠚⣡⣴⣿⣿⣿⡆⠄
+⠄⠄⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠄⣱⣾⣿⣿⣿⣿⣿⣿⠄
+⠄⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿APPROVED⣿⣿⣿⣿⣿⠄
+⠄⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠣⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄
+⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠑⣿⣮⣝⣛⠿⠿⣿⣿⣿⣿⠄
+⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄
+-->
+
+
+
+
+### References
+
+::: {#refs}
+:::
+
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣒⢋⡤⣹⣯⣴⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡔⠉⣽⣿⣿⣦⣉⣿⣯⠉⠴⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠀⠆⠿⠻⠻⠟⠿⠿⢟⣶⡄⢹⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣣⠏⠀⠀⠀⠀⠀⠀⠀⠀⠘⠇⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⠀⠐⢀⠤⠀⠀⠀⠀⠀⠀⠀⡞⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡞⡁⠀⠀⠉⠀⠀⠀⠐⠂⠄⢸⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⠂⠀⠀⠀⠠⠀⠀⠀⠀⠀⠈⡻⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢶⡄⠀⠀⠀⠀⠀⠀⠀⢀⣴⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀⠀⠀⠀⠀⢀⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⠀⠀⠀⠀⠀⠀⠀⠸⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠴⠙⣆⠀⠀⠀⠀⠀⠀⡠⢢⣿⣷⣤⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⣠⡔⠈⣡⣄⡄⠀⠀⠲⠛⠂⠀⠀⠀⠈⠀⢸⣿⣿⣿⣷⣶⣯⣀⣒⡤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⣠⡐⣉⣤⣶⣿⣿⣿⡇⠀⠀⠀⠀⠂⠐⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣾⣵⡄⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣛⡀⠀⠀⠠⢄⣀⣐⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⡆⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⡯⠤⠀⢇⣘⡒⠲⢾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣥⠀⠀⠀⠀⠀⠀ -->
+<!-- ⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣓⠀⢰⠤⢭⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀ -->
+<!-- ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧⠬⠀⢘⣛⣓⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀ -->
+<!-- ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣒⠐⡷⠬⢭⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀ -->
+<!-- ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣭⡁⣛⣓⢲⣿⣿⣿⣿⣿⡏⠉⠛⠛⠛⠻⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀ -->
+<!-- ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡶⢲⠦⢭⣽⣿⣿⣿⣿⣿⣅⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀ -->
+<!-- ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣹⣛⣒⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧ -->
+<!-- ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠾⠬⣭⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣄⠀⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢼ -->
+<!-- ⠻⣿⣿⣿⣿⠛⠋⢋⠁⠀⠀⠀⣶⢗⣛⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣾⣿⣿⡿⣿⣿⣿⣿⣿⣿⣿⣾ -->
+<!-- ⠀⣿⣿⣿⣷⣾⣿⠀⠀⠁⠀⠀⣸⡆⠾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣯ -->
+<!-- ⠀⠈⠻⣿⣿⣿⣿⡆⠀⠤⠄⣰⣿⡇⣭⣿⣿⣿⣿⣿⣿⣿⣿⡿⠻⣿⣿⣿⣿⣿⣿⣿⣿⠿⣿⣿⣿⡿⠟⠋⠁ -->
+<!-- ⠀⠀⠀⠀⠉⠺⢿⣿⣿⣿⣿⣿⣿⣧⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⢸⡿⢹⣿⣿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⡸⢡⣿⣿⣿⣿⣿⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⣷⣿⣿⣿⣿⣿⣿⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⢨⣿⣿⣿⣿⣿⣿⣿⣄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀ -->
