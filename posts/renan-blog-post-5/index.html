@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -88,19 +88,18 @@ div.csl-indent {
 <meta name="quarto:offset" content="../../">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-960d9d362f81d399278ec3e29b622b37.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-e7f4145358ce1d0cd37d8d374dbb44f9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-960d9d362f81d399278ec3e29b622b37.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-1773efb2f7ab98e3656670b7729847ad.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-cef3429e03e90a75e86301dc8df8cee2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-1773efb2f7ab98e3656670b7729847ad.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -143,7 +142,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+      if (mathElements[i].tagName == "SPAN") {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -443,10 +442,10 @@ window.Quarto = {
 <section id="load-packages" class="level3">
 <h3 class="anchored" data-anchor-id="load-packages">1.1 Load packages</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"brant"</span>, <span class="st">"car"</span>, <span class="st">"fastDummies"</span>, <span class="st">"fitdistrplus"</span>, <span class="st">"jtools"</span>, <span class="st">"plyr"</span>, <span class="st">"sas7bdat"</span>, <span class="st">"sjPlot"</span>, <span class="st">"skimr"</span>, <span class="st">"tidyverse"</span>, <span class="st">"rstatix"</span>, <span class="st">"ggplot2"</span>, <span class="st">"MASS"</span>)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"brant"</span>, <span class="st">"car"</span>, <span class="st">"fastDummies"</span>, <span class="st">"fitdistrplus"</span>, <span class="st">"jtools"</span>, <span class="st">"plyr"</span>, <span class="st">"sas7bdat"</span>, <span class="st">"sjPlot"</span>, <span class="st">"skimr"</span>, <span class="st">"tidyverse"</span>, <span class="st">"rstatix"</span>, <span class="st">"ggplot2"</span>, <span class="st">"MASS"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(packages)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(packages, library, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(packages, library, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="load-the-dataset" class="level3">
@@ -455,7 +454,7 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>find_git_root <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">start =</span> <span class="fu">getwd</span>()) {</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>find_git_root <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">start =</span> <span class="fu">getwd</span>()) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  path <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(start, <span class="at">winslash =</span> <span class="st">"/"</span>, <span class="at">mustWork =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (path <span class="sc">!=</span> <span class="fu">dirname</span>(path)) {</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">dir.exists</span>(<span class="fu">file.path</span>(path, <span class="st">".git"</span>))) <span class="fu">return</span>(path)</span>
@@ -471,7 +470,7 @@ window.Quarto = {
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>jhs_analysis1_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(health_data_path, <span class="st">"analysis1.sas7bdat"</span>)</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>jhs_analysis2_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(health_data_path, <span class="st">"analysis2.sas7bdat"</span>)</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>jhs_analysis1 <span class="ot">&lt;-</span> <span class="fu">read.sas7bdat</span>(jhs_analysis1_path)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>jhs_analysis2 <span class="ot">&lt;-</span> <span class="fu">read.sas7bdat</span>(jhs_analysis2_path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>jhs_analysis2 <span class="ot">&lt;-</span> <span class="fu">read.sas7bdat</span>(jhs_analysis2_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -484,16 +483,16 @@ window.Quarto = {
 <p>The Jackson Heart Study (JHS) has a <a href="https://jacksonheartstudy.umc.edu/vizio/JHS-VariablesExpo.html">JHS Variable Explorer</a> which helps to explore all the available variables, its characteristics, data types and the structure as some variables have extensive contextual information about they were obtained and their associated study.</p>
 <p>The objects <strong>jhs_analysis1_variables</strong> and <strong>jhs_analysis2_variables</strong> have the individual features and I found useful when I need to quickly check if my variable is available.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Listing all the attributes in the Dataset</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Listing all the attributes in the Dataset</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># making a datatable is too slow and inneficient</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># DT::datatable(jhs_analysis1, options = list(pageLength = 5))</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># DT::datatable(jhs_analysis2, options = list(pageLength = 5))</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>jhs_analysis1_variables <span class="ot">=</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="at">Feature =</span> <span class="fu">names</span>(jhs_analysis1)))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>jhs_analysis2_variables <span class="ot">=</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="at">Feature =</span> <span class="fu">names</span>(jhs_analysis2)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>jhs_analysis2_variables <span class="ot">=</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="at">Feature =</span> <span class="fu">names</span>(jhs_analysis2)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Comparisson side by side of all the available variables in both Datasets.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract variable names as vectors</span></span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract variable names as vectors</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>vars1 <span class="ot">&lt;-</span> <span class="fu">names</span>(jhs_analysis1)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>vars2 <span class="ot">&lt;-</span> <span class="fu">names</span>(jhs_analysis2)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -509,7 +508,7 @@ window.Quarto = {
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">In_Analysis2 =</span> <span class="fu">union</span>(vars1, vars2) <span class="sc">%in%</span> vars2</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(comparison, <span class="at">caption =</span> <span class="st">"Variable Comparison Between Datasets"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(comparison, <span class="at">caption =</span> <span class="st">"Variable Comparison Between Datasets"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Variable Comparison Between Datasets</caption>
@@ -1574,7 +1573,7 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="dataset-1-jhs_analysis1-data-summary">2.1.1. Dataset 1 jhs_analysis1 Data Summary</h4>
 <p>Below we use the Skimr package to create a more extension Data Summary of <strong>jhs_analysis1</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(jhs_analysis1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(jhs_analysis1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -4249,7 +4248,7 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="dataset-2-jhs_analysis2-data-summary">2.1.2. Dataset 2 jhs_analysis2 Data Summary</h4>
 <p>Below we use the Skimr package to create a more extension Data Summary of <strong>jhs_analysis2</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(jhs_analysis2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(jhs_analysis2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -6119,31 +6118,31 @@ window.Quarto = {
 <p><strong>idealHealthChol</strong>: high cholesterol where 1=ideal health, 0=not ideal health</p>
 <p><strong>PrivatePublicIns</strong>: Indicator of health by Public or Private insurance where 0=uninsured, 1=private insurance only, 2=public insurance only, 3=private and public insurances</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>keeps1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"subjid"</span>, <span class="st">"HbA1c"</span> , <span class="st">"age"</span>, <span class="st">"waist"</span>,<span class="st">"BPmeds"</span>, <span class="st">"everSmoker"</span>, <span class="st">"currentSmoker"</span>, <span class="st">"BPjnc7"</span>, <span class="st">"HTN"</span>, <span class="st">"totchol"</span>, <span class="st">"BMI"</span>, <span class="st">"LVMecho"</span>, <span class="st">"HSgrad"</span>, <span class="st">"BMI3cat"</span>, <span class="st">"nutrition3cat"</span>, <span class="st">"idealHealthBP"</span>, <span class="st">"idealHealthSMK"</span>, <span class="st">"idealHealthDM"</span>, <span class="st">"idealHealthNutrition"</span>, <span class="st">"idealHealthPA"</span>, <span class="st">"idealHealthBMI"</span>, <span class="st">"idealHealthChol"</span>, <span class="st">"PrivatePublicIns"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>keeps2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"subjid"</span>, <span class="st">"HbA1c"</span> , <span class="st">"age"</span>, <span class="st">"waist"</span>,<span class="st">"BPmeds"</span>, <span class="st">"everSmoker"</span>, <span class="st">"currentSmoker"</span>, <span class="st">"BPjnc7"</span>, <span class="st">"HTN"</span>, <span class="st">"totchol"</span>, <span class="st">"BMI"</span>, <span class="st">"BMI3cat"</span>, <span class="st">"nutrition3cat"</span>, <span class="st">"idealHealthBP"</span>, <span class="st">"idealHealthSMK"</span>, <span class="st">"idealHealthDM"</span>, <span class="st">"idealHealthNutrition"</span>, <span class="st">"idealHealthPA"</span>, <span class="st">"idealHealthBMI"</span>, <span class="st">"idealHealthChol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>keeps1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"subjid"</span>, <span class="st">"HbA1c"</span> , <span class="st">"age"</span>, <span class="st">"waist"</span>,<span class="st">"BPmeds"</span>, <span class="st">"everSmoker"</span>, <span class="st">"currentSmoker"</span>, <span class="st">"BPjnc7"</span>, <span class="st">"HTN"</span>, <span class="st">"totchol"</span>, <span class="st">"BMI"</span>, <span class="st">"LVMecho"</span>, <span class="st">"HSgrad"</span>, <span class="st">"BMI3cat"</span>, <span class="st">"nutrition3cat"</span>, <span class="st">"idealHealthBP"</span>, <span class="st">"idealHealthSMK"</span>, <span class="st">"idealHealthDM"</span>, <span class="st">"idealHealthNutrition"</span>, <span class="st">"idealHealthPA"</span>, <span class="st">"idealHealthBMI"</span>, <span class="st">"idealHealthChol"</span>, <span class="st">"PrivatePublicIns"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>keeps2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"subjid"</span>, <span class="st">"HbA1c"</span> , <span class="st">"age"</span>, <span class="st">"waist"</span>,<span class="st">"BPmeds"</span>, <span class="st">"everSmoker"</span>, <span class="st">"currentSmoker"</span>, <span class="st">"BPjnc7"</span>, <span class="st">"HTN"</span>, <span class="st">"totchol"</span>, <span class="st">"BMI"</span>, <span class="st">"BMI3cat"</span>, <span class="st">"nutrition3cat"</span>, <span class="st">"idealHealthBP"</span>, <span class="st">"idealHealthSMK"</span>, <span class="st">"idealHealthDM"</span>, <span class="st">"idealHealthNutrition"</span>, <span class="st">"idealHealthPA"</span>, <span class="st">"idealHealthBMI"</span>, <span class="st">"idealHealthChol"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>jhs_data1 <span class="ot">&lt;-</span> jhs_analysis1 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">all_of</span>(keeps1)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>jhs_data1 <span class="ot">&lt;-</span> jhs_analysis1 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">all_of</span>(keeps1)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `LVMecho`, `HSgrad`, and `PrivatePublicIns` -- dont exist in jhs_analysis2</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>jhs_data2 <span class="ot">&lt;-</span> jhs_analysis2 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">all_of</span>(keeps2)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>jhs_data2 <span class="ot">&lt;-</span> jhs_analysis2 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">all_of</span>(keeps2)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This code chunk I left for debugging, might help if u have furhter questions.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># jhs_analysis1_variables</span></span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># jhs_analysis1_variables</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># jhs_data1 %&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   count(smoking)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   count(smoking)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="create-variable-smoking-binning" class="level4">
 <h4 class="anchored" data-anchor-id="create-variable-smoking-binning">2.2.1 Create Variable Smoking (binning)</h4>
 <p>Create a variable called <strong>smoking</strong> that combines <strong>currentSmoker</strong> (1 = current smoker, 0 = not current smoker) and <strong>everSmoker</strong> (1 = has smoked at least 200 cigarettes in their lifetime, 0 = has not smoked more than 200 cigarettes) into a three level variable, where 1 = current smoker, 2 = former smoker, 3 = never smoker. This variable was only obtained at first patient visit (<strong>jhs_analysis1</strong>) so on the visit two (<strong>jhs_analysis2</strong>) it will be NaN.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>jhs_data1 <span class="ot">&lt;-</span> jhs_data1 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>jhs_data1 <span class="ot">&lt;-</span> jhs_data1 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">smoking =</span> <span class="fu">case_when</span>(currentSmoker<span class="sc">==</span><span class="st">"1"</span> <span class="sc">&amp;</span> everSmoker<span class="sc">==</span><span class="st">"1"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                      currentSmoker<span class="sc">==</span><span class="st">"0"</span> <span class="sc">&amp;</span> everSmoker<span class="sc">==</span><span class="st">"1"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                      currentSmoker<span class="sc">==</span><span class="st">"0"</span> <span class="sc">&amp;</span> everSmoker<span class="sc">==</span><span class="st">"0"</span> <span class="sc">~</span> <span class="dv">3</span>)</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dummy_cols</span>(<span class="at">select_columns =</span> <span class="st">"smoking"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dummy_cols</span>(<span class="at">select_columns =</span> <span class="st">"smoking"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -6197,7 +6196,7 @@ window.Quarto = {
 </tbody>
 </table>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 1. Define the Target Class and Patterns ---</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 1. Define the Target Class and Patterns ---</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>TARGET_CLASS <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># HTN = 1 (Hypertension)</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>PATTERNS <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"smoking_1"</span>, <span class="st">"smoking_2"</span>, <span class="st">"smoking_3"</span>, <span class="st">"BPmeds"</span>, <span class="st">"idealHealthBP"</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -6244,7 +6243,7 @@ window.Quarto = {
 <span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 4. Display the results ---</span></span>
-<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(weights_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(weights_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        Pattern Typical_Weight Discriminative_Weight
 1     smoking_1      0.4459459           -0.01107266
@@ -6359,14 +6358,13 @@ window.Quarto = {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

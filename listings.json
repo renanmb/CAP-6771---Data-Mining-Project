@@ -1,5 +1,12 @@
 [
   {
+    "listing": "/people/index.html",
+    "items": [
+      "/people/barbosa-renan/index.html",
+      "/people/subedi-binita/index.html"
+    ]
+  },
+  {
     "listing": "/blog.html",
     "items": [
       "/posts/binita-blog-post-1/index.html",
@@ -9,13 +16,6 @@
       "/posts/renan-blog-post-5/index.html",
       "/posts/renan-blog-post-6/index.html",
       "/posts/renan-blog-post-1/index.html"
-    ]
-  },
-  {
-    "listing": "/people/index.html",
-    "items": [
-      "/people/barbosa-renan/index.html",
-      "/people/subedi-binita/index.html"
     ]
   }
 ]
