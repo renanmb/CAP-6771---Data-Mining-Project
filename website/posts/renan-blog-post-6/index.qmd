@@ -1,0 +1,431 @@
+---
+title: "The Jackson Heart Study (JHS) Dataset"
+description: "After further evaluation decided to switch to The Jackson Heart Study (JHS) dataset"
+author:
+  - name: Renan monteiro barbosa
+    url: https://github.com/renanmb
+    affiliation: Master of Data Science Program @ The University of West Florida (UWF)
+    # affiliation-url: https://ucsb-meds.github.io/
+# date: 10-24-2022
+categories: [renan]
+# citation:
+#   url: https://samanthacsik.github.io/posts/2022-10-24-my-blog-post/
+image: images/spongebob-imagination.jpg
+draft: false
+bibliography: references.bib
+link-citations: true
+---
+
+The [Jackson Heart Study (JHS)](https://www.jacksonheartstudy.org/) dataset can be obtained by sending an access. I would like to thank Dr. Samantha Seals for being kind enough to provide me with the datasets for the JHS.
+
+
+## 1. Introduction
+
+In this project we will be evaluating variables that are statistically likely to increase the risk of causing some health diseases related to Heart.
+
+### 1.1 Load packages
+
+```{r}
+#| output: false
+
+packages = c("brant", "car", "fastDummies", "fitdistrplus", "jtools", "plyr", "sas7bdat", "sjPlot", "skimr", "tidyverse", "rstatix", "ggplot2", "MASS")
+
+# install.packages(packages)
+lapply(packages, library, character.only = TRUE)
+```
+
+
+### 1.1. Load the Dataset
+
+The code below automates loading the datasets from the folder **datasets** located at the root of the github repository. We will Import the data for the JHS study for visit 1 and for the JHS study for visit 2 from **analysis1.sas7bdat** and **analysis2.sas7bdat**.
+
+```{r}
+#| code-fold: true
+#| output: false
+find_git_root <- function(start = getwd()) {
+  path <- normalizePath(start, winslash = "/", mustWork = TRUE)
+  while (path != dirname(path)) {
+    if (dir.exists(file.path(path, ".git"))) return(path)
+    path <- dirname(path)
+  }
+  stop("No .git directory found — are you inside a Git repository?")
+}
+
+repo_root <- find_git_root()
+datasets_path <- file.path(repo_root, "datasets")
+health_data_path <- file.path(datasets_path, "jhs_data")
+
+jhs_analysis1_path <- file.path(health_data_path, "analysis1.sas7bdat")
+jhs_analysis2_path <- file.path(health_data_path, "analysis2.sas7bdat")
+jhs_analysis1 <- read.sas7bdat(jhs_analysis1_path)
+jhs_analysis2 <- read.sas7bdat(jhs_analysis2_path)
+```
+
+## 2. Data Exploration and Processing
+
+In this section which is intended for the **Project 1** assignment we will be exploring the dataset and processing it to extract the most relevant Attributes.
+
+### 2.1. Dataset Features
+
+The Jackson Heart Study (JHS) has a [JHS Variable Explorer](https://jacksonheartstudy.umc.edu/vizio/JHS-VariablesExpo.html) which helps to explore all the available variables, its characteristics, data types and the structure as some variables have extensive contextual information about they were obtained and their associated study.
+
+The objects **jhs_analysis1_variables** and **jhs_analysis2_variables** have the individual features and I found useful when I need to quickly check if my variable is available.
+
+```{r}
+# Listing all the attributes in the Dataset
+# making a datatable is too slow and inneficient
+# DT::datatable(jhs_analysis1, options = list(pageLength = 5))
+# DT::datatable(jhs_analysis2, options = list(pageLength = 5))
+jhs_analysis1_variables = knitr::kable(data.frame(Feature = names(jhs_analysis1)))
+jhs_analysis2_variables = knitr::kable(data.frame(Feature = names(jhs_analysis2)))
+```
+
+Comparisson side by side of all the available variables in both Datasets.
+
+```{r}
+# Extract variable names as vectors
+vars1 <- names(jhs_analysis1)
+vars2 <- names(jhs_analysis2)
+
+# Compare variable names
+common_vars <- intersect(vars1, vars2)
+only_in_analysis1 <- setdiff(vars1, vars2)
+only_in_analysis2 <- setdiff(vars2, vars1)
+
+# Create comparison table
+comparison <- data.frame(
+  Variable = union(vars1, vars2),
+  In_Analysis1 = union(vars1, vars2) %in% vars1,
+  In_Analysis2 = union(vars1, vars2) %in% vars2
+)
+
+knitr::kable(comparison, caption = "Variable Comparison Between Datasets")
+```
+
+
+
+#### 2.1.1. Dataset 1 jhs_analysis1 Data Summary
+
+Below we use the Skimr package to create a more extension Data Summary of **jhs_analysis1**
+
+```{r}
+skim(jhs_analysis1)
+```
+
+
+#### 2.1.2. Dataset 2 jhs_analysis2 Data Summary
+
+Below we use the Skimr package to create a more extension Data Summary of **jhs_analysis2**
+
+```{r}
+skim(jhs_analysis2)
+```
+
+### 2.2. Data Processing
+
+We will select the most relevant attributes that might contribute to increase Health care risk factor such as stroke and other cardiovascular diseases.
+
+**subjid**: participant ID
+
+**BPmeds**; categorical variable with categories 1 = takes blood pressure lowering medication, 0 = does not take blood pressure lowering drugs
+
+**waist**: waist circumference in cm.
+
+**age**: age in years
+
+**HbA1c**: Hemoglobin A1c, measures the average blood sugar (glucose) 
+
+**BPjnc7**: categorical variable with categories where 0=normotensive, 1=pre-hypertensive, 2=Stage I hypertension, 3=Stage II hypertension
+
+**currentSmoker**: categorical variable with categories (1 = current smoker, 0 = not current smoker)
+
+**everSmoker**: categorical variable with categories (1 = has smoked at least 200 cigarettes in their lifetime, 0 = has not smoked more than 200 cigarettes)
+
+**HTN**: categorical variable for Hypertension Status where 1 = yes, 0 = no
+
+**totchol**: Fasting Total Cholesterol
+
+**BMI**: Body mass index
+
+**LVMecho**: Left Ventricular Mass in grams by Echocardiography
+
+**HSgrad**: categorical variable for High School Graduate where 0=did not graduate high school, 1=graduated high school
+
+**BMI3cat**: categorize health status based on BMI where 0=poor health, 1=intermediate health, 2=ideal health
+
+**nutrition3cat**: health status as defined by nutrition from self-reported food inventories where 0=poor health, 1=intermediate health, 2=ideal health
+
+**idealHealthBP** blood pressure where 1=ideal health, 0=not ideal health
+
+**idealHealthSMK**: smoking status where 1=ideal health, 0=not ideal health
+
+**idealHealthDM**: diabetes where 1=ideal health, 0=not ideal health
+
+**idealHealthNutrition**: diet where 1=ideal health, 0=not ideal health
+
+**idealHealthPA**: physical activity where 1=ideal health, 0=not ideal health
+
+**idealHealthBMI**: obesity where 1=ideal health, 0=not ideal health
+
+**idealHealthChol**: high cholesterol where 1=ideal health, 0=not ideal health
+
+**PrivatePublicIns**: Indicator of health by Public or Private insurance where 0=uninsured, 1=private insurance only, 2=public insurance only, 3=private and public insurances
+
+```{r}
+keeps1 <- c("subjid", "HbA1c" , "age", "waist","BPmeds", "everSmoker", "currentSmoker", "BPjnc7", "HTN", "totchol", "BMI", "LVMecho", "HSgrad", "BMI3cat", "nutrition3cat", "idealHealthBP", "idealHealthSMK", "idealHealthDM", "idealHealthNutrition", "idealHealthPA", "idealHealthBMI", "idealHealthChol", "PrivatePublicIns")
+keeps2 <- c("subjid", "HbA1c" , "age", "waist","BPmeds", "everSmoker", "currentSmoker", "BPjnc7", "HTN", "totchol", "BMI", "BMI3cat", "nutrition3cat", "idealHealthBP", "idealHealthSMK", "idealHealthDM", "idealHealthNutrition", "idealHealthPA", "idealHealthBMI", "idealHealthChol")
+```
+
+```{r}
+jhs_data1 <- jhs_analysis1 %>% select(all_of(keeps1)) %>% na.omit()
+
+# `LVMecho`, `HSgrad`, and `PrivatePublicIns` -- dont exist in jhs_analysis2
+jhs_data2 <- jhs_analysis2 %>% select(all_of(keeps2)) %>% na.omit()
+```
+
+This code chunk I left for debugging, might help if u have furhter questions.
+
+```{r}
+# jhs_analysis1_variables
+# jhs_data1 %>%
+#   count(smoking)
+```
+
+
+#### 2.2.1 Create Variable Smoking (binning) 
+
+Create a variable called **smoking** that combines **currentSmoker** (1 = current smoker, 0 = not current smoker) and **everSmoker** (1 = has smoked at least 200 cigarettes in their lifetime, 0 = has not smoked more than 200 cigarettes) into a three level variable, where 1 = current smoker, 2 = former smoker, 3 = never smoker. This variable was only obtained at first patient visit (**jhs_analysis1**) so on the visit two (**jhs_analysis2**) it will be NaN.
+
+```{r}
+jhs_data1 <- jhs_data1 %>% mutate(
+  smoking = case_when(currentSmoker=="1" & everSmoker=="1" ~ 1,
+                      currentSmoker=="0" & everSmoker=="1" ~ 2,
+                      currentSmoker=="0" & everSmoker=="0" ~ 3)
+) %>%
+  dummy_cols(select_columns = "smoking")
+```
+
+## 3. Calculate the t and d weights
+
+**Typical-Weight (TW)**
+
+The Typical-Weight ($\text{TW}$) measures how important or typical a pattern is to the class of interest. It is the ratio of the pattern's frequency (support) in the target class to its overall frequency in the entire dataset:
+
+$$\text{TW}(P, C) = \frac{\text{Support}(P \text{ in } C)}{\text{Support}(P \text{ in } D)}$$
+
+A high Typical-Weight (close to $1$) means the pattern is highly typical of the class.
+
+For example, the pattern BPmeds has a $\text{Typical-Weight}$ of $\mathbf{0.740}$. This means that $74.0\%$ of all individuals who take BP medication are in the Hypertension ($\text{HTN}=1$) class.
+
+**Discriminative-Weight (DW)**
+
+The Discriminative-Weight ($\text{DW}$) measures how well a pattern distinguishes the class of interest from all other classes. It is calculated as the difference between the pattern's frequency in the target class and its maximum frequency in any other class: 
+
+$$\text{DW}(P, C) = \text{Support}(P \text{ in } C) - \max_{C' \neq C} \{\text{Support}(P \text{ in } C')\}$$
+
+A positive Discriminative-Weight means the pattern occurs more frequently with the target class than with any other class, making it a good discriminator.
+
+For example, the pattern BPmeds has a $\text{Discriminative-Weight}$ of $\mathbf{0.135}$. This means that the fraction of the total population who are Hypertensive and take BP meds is $13.5$ percentage points higher than the fraction of the total population who are not Hypertensive and take BP meds, making it the strongest positive indicator for $\text{HTN}=1$.
+
+
+```{r}
+# --- 1. Define the Target Class and Patterns ---
+TARGET_CLASS <- 1  # HTN = 1 (Hypertension)
+PATTERNS <- c("smoking_1", "smoking_2", "smoking_3", "BPmeds", "idealHealthBP")
+
+# --- 2. Initialize a data frame to store results ---
+weights_df <- data.frame(
+  Pattern = PATTERNS,
+  Typical_Weight = NA,
+  Discriminative_Weight = NA
+)
+
+N_total <- nrow(jhs_data1)
+
+# --- 3. Loop through each pattern and calculate weights ---
+for (i in 1:length(PATTERNS)) {
+  P <- PATTERNS[i]
+
+  # Ensure the pattern column is numeric (0/1) for summation
+  jhs_data1[[P]] <- as.numeric(as.character(jhs_data1[[P]]))
+
+  # A. Calculate Supports (normalized by total N)
+  # Total support for the pattern S(P)
+  count_P <- sum(jhs_data1[[P]], na.rm = TRUE)
+  S_P <- count_P / N_total
+
+  # Support for the pattern in the target class S(P in C)
+  count_P_in_class <- sum(jhs_data1[[P]][jhs_data1$HTN == TARGET_CLASS], na.rm = TRUE)
+  S_P_in_class <- count_P_in_class / N_total
+
+  # Support for the pattern in the non-target class S(P in not C)
+  count_P_in_not_class <- sum(jhs_data1[[P]][jhs_data1$HTN != TARGET_CLASS], na.rm = TRUE)
+  S_P_in_not_class <- count_P_in_not_class / N_total
+
+  # B. Calculate Typical-Weight (TW)
+  # TW(P, C) = S(P in C) / S(P)
+  TW <- ifelse(S_P > 0, S_P_in_class / S_P, 0)
+
+  # C. Calculate Discriminative-Weight (DW)
+  # DW(P, C) = S(P in C) - S(P in not C) (since only two classes)
+  DW <- S_P_in_class - S_P_in_not_class
+
+  # D. Store Results
+  weights_df[i, "Typical_Weight"] <- TW
+  weights_df[i, "Discriminative_Weight"] <- DW
+}
+
+# --- 4. Display the results ---
+print(weights_df)
+```
+
+
+```{r}
+# 1. Ensure the grouping variable is a factor
+jhs_data1$BPjnc7 <- as.factor(jhs_data1$BPjnc7)
+
+# 2. Standardize predictor variables for accurate typical-weights
+jhs_data1_std <- jhs_data1 %>% 
+  mutate(across(c(HbA1c, age, waist, totchol, BMI, LVMecho), scale))
+```
+
+```{r}
+# 3. Perform LDA on standardized data to get the Typical-Weights (Canonical Coefficients)
+lda_model_std <- lda(BPjnc7 ~ HbA1c + age + waist + totchol + BMI + LVMecho, data = jhs_data1_std)
+typical_weights <- as.data.frame(lda_model_std$scaling)
+colnames(typical_weights) <- paste0("LD", 1:ncol(typical_weights), "_Typical_Weight")
+cat("\n\nTypical Weights (Standardized Canonical Coefficients):\n")
+print(typical_weights)
+```
+
+```{{r}}
+# 4. Perform LDA on original data for Discriminative-Weights (Structure Coefficients)
+lda_model <- lda(BPjnc7 ~ HbA1c + age + waist + totchol + BMI + LVMecho, data = jhs_data1)
+discriminative_weights <- rstatix::get_discriminant_loadings(lda_model)
+cat("\n\nDiscriminative Weights (Structure Coefficients/Loadings):\n")
+print(discriminative_weights)
+```
+
+```{{r}}
+# 1. Calculate the Discriminant Function Scores (DF scores) for each subject
+# The 'predict' function gives you the values for LD1, LD2, etc.
+ld_scores <- predict(lda_model, jhs_data1)$x
+ld_scores <- as.data.frame(ld_scores)
+
+# 2. Extract the continuous predictor variables
+predictor_vars <- jhs_data1 %>%
+  dplyr::select(HbA1c, age, waist, totchol, BMI, LVMecho)
+
+# 3. Calculate the Discriminative Weights (Structure Coefficients)
+# These are the correlations between the predictor variables and the LD scores.
+discriminative_weights <- cor(predictor_vars, ld_scores)
+
+cat("\n\nDiscriminative Weights (Structure Coefficients/Loadings):\n")
+print(discriminative_weights)
+```
+
+```{r}
+# Save the weights for the final explanation
+# Placeholder for actual data analysis
+# typical_weight_age <- typical_weights["age", "LD1_Typical_Weight"]
+# discriminative_weight_age <- discriminative_weights %>% 
+#   filter(variable == "age") %>% 
+#   pull(LD1)
+```
+
+### Explanation with Placeholder Values
+
+The **typical-weights** are the standardized coefficients used to calculate a subject's discriminant score, showing the relative contribution of each variable. For instance, **age** has a typical-weight of **0.85** on the first discriminant function (LD1), meaning it is a strong contributor to the function, while the **discriminative-weights** are the correlations between the predictors and the discriminant functions, indicating shared variance. **Age** has a discriminative-weight (loading) of **0.91** on LD1, suggesting it is highly correlated with the primary dimension that separates the **`BPjnc7`** groups.
+
+
+<!--                 ()            -->
+<!--                 JL            -->
+<!--                 ||            -->
+<!--                 LJ            -->
+<!--           _,--"""""""---.     -->
+<!--         ,'               `.   -->
+<!--        /                   \  -->
+<!--       J                     L -->
+<!--       F                     L -->
+<!--      J                      J -->
+<!--      |                      J -->
+<!--   ___L______________        J -->
+<!--  /,---------------. "".     J -->
+<!-- JJ   /     \/      |  J     J -->
+<!-- LL  J      J       |   L    J -->
+<!-- JJ  J #    J #     |   L    | -->
+<!--  \\__`.___,_`.____,'   F    | -->
+<!--   ""-.---------....___/     | -->
+<!--      |_T--+---+--.,._       | -->
+<!--        |--|----\---\-`.     | -->
+<!--        |__|____J___J_ F     F -->
+<!--       _|__|____|___|_/      L -->
+<!--      |                      L -->
+<!--      |____________________M-K -->
+
+<!-- 
+⠄⠄⣿⣿⣿⣿⠘⡿⢛⣿⣿⣿⣿⣿⣧⢻⣿⣿⠃⠸⣿⣿⣿⠄⠄⠄⠄⠄
+⠄⠄⣿⣿⣿⣿⢀⠼⣛⣛⣭⢭⣟⣛⣛⣛⠿⠿⢆⡠⢿⣿⣿⠄⠄⠄⠄⠄
+⠄⠄⠸⣿⣿⢣⢶⣟⣿⣖⣿⣷⣻⣮⡿⣽⣿⣻⣖⣶⣤⣭⡉⠄⠄⠄⠄⠄
+⠄⠄⠄⢹⠣⣛⣣⣭⣭⣭⣁⡛⠻⢽⣿⣿⣿⣿⢻⣿⣿⣿⣽⡧⡄⠄⠄⠄
+⠄⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣶⣌⡛⢿⣽⢘⣿⣷⣿⡻⠏⣛⣀⠄⠄
+⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠙⡅⣿⠚⣡⣴⣿⣿⣿⡆⠄
+⠄⠄⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠄⣱⣾⣿⣿⣿⣿⣿⣿⠄
+⠄⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿APPROVED⣿⣿⣿⣿⣿⠄
+⠄⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠣⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄
+⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠑⣿⣮⣝⣛⠿⠿⣿⣿⣿⣿⠄
+⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄
+-->
+
+
+<!-- 
+⣿⣿⡇⢩⠘⣴⣿⣥⣤⢦⢁⠄⠉⡄⡇⠛⠛⠛⢛⣭⣾⣿⣿⡏
+⣿⣿⣿⡇⠹⢇⡹⣿⣿⣛⣓⣿⡿⠞⠑⣱⠄⢀⣴⣿⣿⣿⣿⡟
+⣿⣿⣿⣧⣸⡄⣿⣪⡻⣿⠿⠋⠄⠄⣀⣀⢡⣿⣿⣿⣿⡿⠋
+⠘⣿⣿⣿⣿⣷⣭⣓⡽⡆⡄⢀⣤⣾⣿⣿⣿⣿⣿⡿⠋
+⠄⢨⡻⡇⣿⢿⣿⣿⣭⡶⣿⣿⣿⣜⢿⡇⡿⠟⠉
+⠄⠸⣷⡅⣫⣾⣿⣿⣿⣷⣙⢿⣿⣿⣷⣦⣚⡀
+⠄⠄⢉⣾⡟⠙⠶⠖⠈⢻⣿⣷⣅⢻⣿⣿⣿⣿⣿⣶⣶⡆⠄⣤⡀
+⠄⢠⣿⣿⣧⣀⣀⣀⣀⣼⣿⣿⣿⡎⢿⣿⣿⣿⣿⣿⣿⣇⠄⠈⠁
+⠄⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢇⣎⢿⣿⣿⣿⣿⣿⣿⣿⣶⣶
+⠄⠄⠻⢿⣿⣿⣿⣿⣿⣿⣿⢟⣫⣾⣿⣷⡹⣿⣿⣿⣿⣿⣿⣿⡟
+⠄⠄⠄⠄⢮⣭⣍⡭⣭⡵⣾⣿⣿⣿⡎⣿⣿⣌⠻⠿⠿⠿⠟⠋
+⠄⠄⠄⠄⠈⠻⣿⣿⣿⣿⣹⣿⣿⣿⡇⣿⣿⡿
+⠄⠄⣀⣴⣾⣶⡞⣿⣿⣿⣿⣿⣿⣿⣾⣿⡿ 
+-->
+
+### References
+
+::: {#refs}
+:::
+
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣒⢋⡤⣹⣯⣴⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡔⠉⣽⣿⣿⣦⣉⣿⣯⠉⠴⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠀⠆⠿⠻⠻⠟⠿⠿⢟⣶⡄⢹⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣣⠏⠀⠀⠀⠀⠀⠀⠀⠀⠘⠇⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⠀⠐⢀⠤⠀⠀⠀⠀⠀⠀⠀⡞⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡞⡁⠀⠀⠉⠀⠀⠀⠐⠂⠄⢸⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⠂⠀⠀⠀⠠⠀⠀⠀⠀⠀⠈⡻⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢶⡄⠀⠀⠀⠀⠀⠀⠀⢀⣴⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀⠀⠀⠀⠀⢀⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⠀⠀⠀⠀⠀⠀⠀⠸⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠴⠙⣆⠀⠀⠀⠀⠀⠀⡠⢢⣿⣷⣤⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⣠⡔⠈⣡⣄⡄⠀⠀⠲⠛⠂⠀⠀⠀⠈⠀⢸⣿⣿⣿⣷⣶⣯⣀⣒⡤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⣠⡐⣉⣤⣶⣿⣿⣿⡇⠀⠀⠀⠀⠂⠐⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣾⣵⡄⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣛⡀⠀⠀⠠⢄⣀⣐⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⡆⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⡯⠤⠀⢇⣘⡒⠲⢾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣥⠀⠀⠀⠀⠀⠀ -->
+<!-- ⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣓⠀⢰⠤⢭⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀ -->
+<!-- ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧⠬⠀⢘⣛⣓⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀ -->
+<!-- ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣒⠐⡷⠬⢭⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀ -->
+<!-- ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣭⡁⣛⣓⢲⣿⣿⣿⣿⣿⡏⠉⠛⠛⠛⠻⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀ -->
+<!-- ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡶⢲⠦⢭⣽⣿⣿⣿⣿⣿⣅⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀ -->
+<!-- ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣹⣛⣒⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧ -->
+<!-- ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠾⠬⣭⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣄⠀⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢼ -->
+<!-- ⠻⣿⣿⣿⣿⠛⠋⢋⠁⠀⠀⠀⣶⢗⣛⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣾⣿⣿⡿⣿⣿⣿⣿⣿⣿⣿⣾ -->
+<!-- ⠀⣿⣿⣿⣷⣾⣿⠀⠀⠁⠀⠀⣸⡆⠾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣯ -->
+<!-- ⠀⠈⠻⣿⣿⣿⣿⡆⠀⠤⠄⣰⣿⡇⣭⣿⣿⣿⣿⣿⣿⣿⣿⡿⠻⣿⣿⣿⣿⣿⣿⣿⣿⠿⣿⣿⣿⡿⠟⠋⠁ -->
+<!-- ⠀⠀⠀⠀⠉⠺⢿⣿⣿⣿⣿⣿⣿⣧⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⢸⡿⢹⣿⣿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⡸⢡⣿⣿⣿⣿⣿⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⠀⣷⣿⣿⣿⣿⣿⣿⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀ -->
+<!-- ⠀⠀⠀⠀⠀⢨⣿⣿⣿⣿⣿⣿⣿⣄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀ -->

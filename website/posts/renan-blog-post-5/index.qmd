@@ -28,16 +28,16 @@ In this project we will be evaluating variables that are statistically likely to
 ```{r}
 #| output: false
 
-packages = c("brant", "car", "fastDummies", "fitdistrplus", "jtools", "plyr", "sas7bdat", "sjPlot", "skimr", "tidyverse", "rstatix", "ggplot2")
+packages = c("brant", "car", "fastDummies", "fitdistrplus", "jtools", "plyr", "sas7bdat", "sjPlot", "skimr", "tidyverse", "rstatix", "ggplot2", "MASS")
 
 # install.packages(packages)
 lapply(packages, library, character.only = TRUE)
 ```
 
 
-## 1.1. Load the Dataset
+### 1.1. Load the Dataset
 
-The code below automates loading the datasets from the folder **datasets** located at the root of the github repository. We will be loading the datasets **analysis1.sas7bdat** and **analysis2.sas7bdat**.
+The code below automates loading the datasets from the folder **datasets** located at the root of the github repository. We will Import the data for the JHS study for visit 1 and for the JHS study for visit 2 from **analysis1.sas7bdat** and **analysis2.sas7bdat**.
 
 ```{r}
 #| code-fold: true
@@ -65,7 +65,7 @@ jhs_analysis2 <- read.sas7bdat(jhs_analysis2_path)
 
 In this section which is intended for the **Project 1** assignment we will be exploring the dataset and processing it to extract the most relevant Attributes.
 
-## 2.1. Dataset Features
+### 2.1. Dataset Features
 
 The Jackson Heart Study (JHS) has a [JHS Variable Explorer](https://jacksonheartstudy.umc.edu/vizio/JHS-VariablesExpo.html) which helps to explore all the available variables, its characteristics, data types and the structure as some variables have extensive contextual information about they were obtained and their associated study.
 
@@ -104,7 +104,7 @@ knitr::kable(comparison, caption = "Variable Comparison Between Datasets")
 
 
 
-### 2.1.1. Dataset 1 jhs_analysis1 Data Summary
+#### 2.1.1. Dataset 1 jhs_analysis1 Data Summary
 
 Below we use the Skimr package to create a more extension Data Summary of **jhs_analysis1**
 
@@ -113,7 +113,7 @@ skim(jhs_analysis1)
 ```
 
 
-### 2.1.2. Dataset 2 jhs_analysis2 Data Summary
+#### 2.1.2. Dataset 2 jhs_analysis2 Data Summary
 
 Below we use the Skimr package to create a more extension Data Summary of **jhs_analysis2**
 
@@ -121,111 +121,171 @@ Below we use the Skimr package to create a more extension Data Summary of **jhs_
 skim(jhs_analysis2)
 ```
 
-## 2.2. Data Processing
+### 2.2. Data Processing
 
-Below we there is a summary showing a significant ammount of NAs in 3 numerical variables
+We will select the most relevant attributes that might contribute to increase Health care risk factor such as stroke and other cardiovascular diseases.
+
+**subjid**: participant ID
+
+**BPmeds**; categorical variable with categories 1 = takes blood pressure lowering medication, 0 = does not take blood pressure lowering drugs
+
+**waist**: waist circumference in cm.
+
+**age**: age in years
+
+**HbA1c**: Hemoglobin A1c, measures the average blood sugar (glucose) 
+
+**BPjnc7**: categorical variable with categories where 0=normotensive, 1=pre-hypertensive, 2=Stage I hypertension, 3=Stage II hypertension
+
+**currentSmoker**: categorical variable with categories (1 = current smoker, 0 = not current smoker)
+
+**everSmoker**: categorical variable with categories (1 = has smoked at least 200 cigarettes in their lifetime, 0 = has not smoked more than 200 cigarettes)
+
+**HTN**: categorical variable for Hypertension Status where 1 = yes, 0 = no
+
+**totchol**: Fasting Total Cholesterol
+
+**BMI**: Body mass index
+
+**LVMecho**: Left Ventricular Mass in grams by Echocardiography
+
+**HSgrad**: categorical variable for High School Graduate where 0=did not graduate high school, 1=graduated high school
+
+**BMI3cat**: categorize health status based on BMI where 0=poor health, 1=intermediate health, 2=ideal health
+
+**nutrition3cat**: health status as defined by nutrition from self-reported food inventories where 0=poor health, 1=intermediate health, 2=ideal health
+
+**idealHealthBP** blood pressure where 1=ideal health, 0=not ideal health
+
+**idealHealthSMK**: smoking status where 1=ideal health, 0=not ideal health
+
+**idealHealthDM**: diabetes where 1=ideal health, 0=not ideal health
+
+**idealHealthNutrition**: diet where 1=ideal health, 0=not ideal health
+
+**idealHealthPA**: physical activity where 1=ideal health, 0=not ideal health
+
+**idealHealthBMI**: obesity where 1=ideal health, 0=not ideal health
+
+**idealHealthChol**: high cholesterol where 1=ideal health, 0=not ideal health
+
+**PrivatePublicIns**: Indicator of health by Public or Private insurance where 0=uninsured, 1=private insurance only, 2=public insurance only, 3=private and public insurances
 
 ```{r}
-#| code-fold: true
+keeps1 <- c("subjid", "HbA1c" , "age", "waist","BPmeds", "everSmoker", "currentSmoker", "BPjnc7", "HTN", "totchol", "BMI", "LVMecho", "HSgrad", "BMI3cat", "nutrition3cat", "idealHealthBP", "idealHealthSMK", "idealHealthDM", "idealHealthNutrition", "idealHealthPA", "idealHealthBMI", "idealHealthChol", "PrivatePublicIns")
+keeps2 <- c("subjid", "HbA1c" , "age", "waist","BPmeds", "everSmoker", "currentSmoker", "BPjnc7", "HTN", "totchol", "BMI", "BMI3cat", "nutrition3cat", "idealHealthBP", "idealHealthSMK", "idealHealthDM", "idealHealthNutrition", "idealHealthPA", "idealHealthBMI", "idealHealthChol")
+```
 
-# Get the total number of rows for calculating percentages
-total_rows <- nrow(health_data)
+```{r}
+jhs_data1 <- jhs_analysis1 %>% select(all_of(keeps1)) %>% na.omit()
 
-# Create a pretty summary table
-na_summary <- health_data %>%
-  # 1. Count NAs for every column
-  summarise(across(everything(), ~sum(is.na(.)))) %>%
-  
-  # 2. Pivot the data from wide to long
-  pivot_longer(everything(),
-               names_to = "Column",
-               values_to = "NA_Count") %>%
-  
-  # 3. (Optional) Filter to only show columns that HAVE NAs
-  filter(NA_Count > 0) %>%
-  
-  # 4. (Optional) Add a percentage column
-  mutate(NA_Percentage = (NA_Count / total_rows) * 100) %>%
+# `LVMecho`, `HSgrad`, and `PrivatePublicIns` -- dont exist in jhs_analysis2
+jhs_data2 <- jhs_analysis2 %>% select(all_of(keeps2)) %>% na.omit()
+```
 
-  # 5. Sort by the highest NA count
-  arrange(desc(NA_Count))
+This code chunk I left for debugging, might help if u have furhter questions.
 
-# Print the clean table
-print(na_summary)
+```{r}
+# jhs_analysis1_variables
+# jhs_data1 %>%
+#   count(smoking)
 ```
 
 
+#### 2.2.1 Create Variable Smoking (binning) 
+
+Create a variable called **smoking** that combines **currentSmoker** (1 = current smoker, 0 = not current smoker) and **everSmoker** (1 = has smoked at least 200 cigarettes in their lifetime, 0 = has not smoked more than 200 cigarettes) into a three level variable, where 1 = current smoker, 2 = former smoker, 3 = never smoker. This variable was only obtained at first patient visit (**jhs_analysis1**) so on the visit two (**jhs_analysis2**) it will be NaN.
+
 ```{r}
-keeps <- c("HbA1c" , "age", "waist","BPmeds", "everSmoker", "currentSmoker")
-jhs_data <- jhs_analysis1 %>% select(all_of(keeps)) %>% na.omit()
+jhs_data1 <- jhs_data1 %>% mutate(
+  smoking = case_when(currentSmoker=="1" & everSmoker=="1" ~ 1,
+                      currentSmoker=="0" & everSmoker=="1" ~ 2,
+                      currentSmoker=="0" & everSmoker=="0" ~ 3)
+) %>%
+  dummy_cols(select_columns = "smoking")
 ```
 
+## 3. Calculate the t and d weights
 
-<!-- 
-⣿⣿⡇⢩⠘⣴⣿⣥⣤⢦⢁⠄⠉⡄⡇⠛⠛⠛⢛⣭⣾⣿⣿⡏
-⣿⣿⣿⡇⠹⢇⡹⣿⣿⣛⣓⣿⡿⠞⠑⣱⠄⢀⣴⣿⣿⣿⣿⡟
-⣿⣿⣿⣧⣸⡄⣿⣪⡻⣿⠿⠋⠄⠄⣀⣀⢡⣿⣿⣿⣿⡿⠋
-⠘⣿⣿⣿⣿⣷⣭⣓⡽⡆⡄⢀⣤⣾⣿⣿⣿⣿⣿⡿⠋
-⠄⢨⡻⡇⣿⢿⣿⣿⣭⡶⣿⣿⣿⣜⢿⡇⡿⠟⠉
-⠄⠸⣷⡅⣫⣾⣿⣿⣿⣷⣙⢿⣿⣿⣷⣦⣚⡀
-⠄⠄⢉⣾⡟⠙⠶⠖⠈⢻⣿⣷⣅⢻⣿⣿⣿⣿⣿⣶⣶⡆⠄⣤⡀
-⠄⢠⣿⣿⣧⣀⣀⣀⣀⣼⣿⣿⣿⡎⢿⣿⣿⣿⣿⣿⣿⣇⠄⠈⠁
-⠄⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢇⣎⢿⣿⣿⣿⣿⣿⣿⣿⣶⣶
-⠄⠄⠻⢿⣿⣿⣿⣿⣿⣿⣿⢟⣫⣾⣿⣷⡹⣿⣿⣿⣿⣿⣿⣿⡟
-⠄⠄⠄⠄⢮⣭⣍⡭⣭⡵⣾⣿⣿⣿⡎⣿⣿⣌⠻⠿⠿⠿⠟⠋
-⠄⠄⠄⠄⠈⠻⣿⣿⣿⣿⣹⣿⣿⣿⡇⣿⣿⡿
-⠄⠄⣀⣴⣾⣶⡞⣿⣿⣿⣿⣿⣿⣿⣾⣿⡿ 
--->
+**Typical-Weight (TW)**
 
+The Typical-Weight ($\text{TW}$) measures how important or typical a pattern is to the class of interest. It is the ratio of the pattern's frequency (support) in the target class to its overall frequency in the entire dataset:
 
-## 4. Data Preprocessing and Cleaning
+$$\text{TW}(P, C) = \frac{\text{Support}(P \text{ in } C)}{\text{Support}(P \text{ in } D)}$$
 
+A high Typical-Weight (close to $1$) means the pattern is highly typical of the class.
 
+For example, the pattern BPmeds has a $\text{Typical-Weight}$ of $\mathbf{0.937}$. This means that $93.7\%$ of all individuals who take BP medication are in the Hypertension ($\text{HTN}=1$) class.
 
-<!-- 
-⣿⣿⡇⢩⠘⣴⣿⣥⣤⢦⢁⠄⠉⡄⡇⠛⠛⠛⢛⣭⣾⣿⣿⡏
-⣿⣿⣿⡇⠹⢇⡹⣿⣿⣛⣓⣿⡿⠞⠑⣱⠄⢀⣴⣿⣿⣿⣿⡟
-⣿⣿⣿⣧⣸⡄⣿⣪⡻⣿⠿⠋⠄⠄⣀⣀⢡⣿⣿⣿⣿⡿⠋
-⠘⣿⣿⣿⣿⣷⣭⣓⡽⡆⡄⢀⣤⣾⣿⣿⣿⣿⣿⡿⠋
-⠄⢨⡻⡇⣿⢿⣿⣿⣭⡶⣿⣿⣿⣜⢿⡇⡿⠟⠉
-⠄⠸⣷⡅⣫⣾⣿⣿⣿⣷⣙⢿⣿⣿⣷⣦⣚⡀
-⠄⠄⢉⣾⡟⠙⠶⠖⠈⢻⣿⣷⣅⢻⣿⣿⣿⣿⣿⣶⣶⡆⠄⣤⡀
-⠄⢠⣿⣿⣧⣀⣀⣀⣀⣼⣿⣿⣿⡎⢿⣿⣿⣿⣿⣿⣿⣇⠄⠈⠁
-⠄⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢇⣎⢿⣿⣿⣿⣿⣿⣿⣿⣶⣶
-⠄⠄⠻⢿⣿⣿⣿⣿⣿⣿⣿⢟⣫⣾⣿⣷⡹⣿⣿⣿⣿⣿⣿⣿⡟
-⠄⠄⠄⠄⢮⣭⣍⡭⣭⡵⣾⣿⣿⣿⡎⣿⣿⣌⠻⠿⠿⠿⠟⠋
-⠄⠄⠄⠄⠈⠻⣿⣿⣿⣿⣹⣿⣿⣿⡇⣿⣿⡿
-⠄⠄⣀⣴⣾⣶⡞⣿⣿⣿⣿⣿⣿⣿⣾⣿⡿ 
--->
+**Discriminative-Weight (DW)**
 
-## 5. Determination of Relevant Variables
+The Discriminative-Weight ($\text{DW}$) measures how well a pattern distinguishes the class of interest from all other classes. It is calculated as the difference between the pattern's frequency in the target class and its maximum frequency in any other class: 
 
-The outcome of risk must be defined as a target variable in order to determine the most relevant variables related to healthcare risks.
+$$\text{DW}(P, C) = \text{Support}(P \text{ in } C) - \max_{C' \neq C} \{\text{Support}(P \text{ in } C')\}$$
+
+A positive Discriminative-Weight means the pattern occurs more frequently with the target class than with any other class, making it a good discriminator.
+
+For example, the pattern BPmeds has a $\text{Discriminative-Weight}$ of $\mathbf{0.39}$. This means that the fraction of the total population who are Hypertensive and take BP meds is $39%$ percentage points higher than the fraction of the total population who are not Hypertensive and take BP meds, making it the strongest positive indicator for $\text{HTN}=1$.
+
+| Pattern        | Typical_Weight | Discriminative_Weight |
+|----------------|----------------|------------------------|
+| smoking_1      | 0.4459459      | -0.01107266            |
+| smoking_2      | 0.5644444      | 0.02006920             |
+| smoking_3      | 0.4589552      | -0.06089965            |
+| BPmeds         | 0.9379845      | 0.39100346             |
+| idealHealthBP  | 0.0000000      | -0.26228374            |
 
 
+```{r}
+# --- 1. Define the Target Class and Patterns ---
+TARGET_CLASS <- 1  # HTN = 1 (Hypertension)
+PATTERNS <- c("smoking_1", "smoking_2", "smoking_3", "BPmeds", "idealHealthBP")
 
-### 5.1 Define a Target Variable
+# --- 2. Initialize a data frame to store results ---
+weights_df <- data.frame(
+  Pattern = PATTERNS,
+  Typical_Weight = NA,
+  Discriminative_Weight = NA
+)
 
+N_total <- nrow(jhs_data1)
 
+# --- 3. Loop through each pattern and calculate weights ---
+for (i in 1:length(PATTERNS)) {
+  P <- PATTERNS[i]
 
-### 5.2 Feature Selection Methodology
+  # Ensure the pattern column is numeric (0/1) for summation
+  jhs_data1[[P]] <- as.numeric(as.character(jhs_data1[[P]]))
 
+  # A. Calculate Supports (normalized by total N)
+  # Total support for the pattern S(P)
+  count_P <- sum(jhs_data1[[P]], na.rm = TRUE)
+  S_P <- count_P / N_total
 
-<!-- 
-⠄⠄⣿⣿⣿⣿⠘⡿⢛⣿⣿⣿⣿⣿⣧⢻⣿⣿⠃⠸⣿⣿⣿⠄⠄⠄⠄⠄
-⠄⠄⣿⣿⣿⣿⢀⠼⣛⣛⣭⢭⣟⣛⣛⣛⠿⠿⢆⡠⢿⣿⣿⠄⠄⠄⠄⠄
-⠄⠄⠸⣿⣿⢣⢶⣟⣿⣖⣿⣷⣻⣮⡿⣽⣿⣻⣖⣶⣤⣭⡉⠄⠄⠄⠄⠄
-⠄⠄⠄⢹⠣⣛⣣⣭⣭⣭⣁⡛⠻⢽⣿⣿⣿⣿⢻⣿⣿⣿⣽⡧⡄⠄⠄⠄
-⠄⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣶⣌⡛⢿⣽⢘⣿⣷⣿⡻⠏⣛⣀⠄⠄
-⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠙⡅⣿⠚⣡⣴⣿⣿⣿⡆⠄
-⠄⠄⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠄⣱⣾⣿⣿⣿⣿⣿⣿⠄
-⠄⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿APPROVED⣿⣿⣿⣿⣿⠄
-⠄⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠣⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄
-⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠑⣿⣮⣝⣛⠿⠿⣿⣿⣿⣿⠄
-⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄
--->
+  # Support for the pattern in the target class S(P in C)
+  count_P_in_class <- sum(jhs_data1[[P]][jhs_data1$HTN == TARGET_CLASS], na.rm = TRUE)
+  S_P_in_class <- count_P_in_class / N_total
 
+  # Support for the pattern in the non-target class S(P in not C)
+  count_P_in_not_class <- sum(jhs_data1[[P]][jhs_data1$HTN != TARGET_CLASS], na.rm = TRUE)
+  S_P_in_not_class <- count_P_in_not_class / N_total
 
+  # B. Calculate Typical-Weight (TW)
+  # TW(P, C) = S(P in C) / S(P)
+  TW <- ifelse(S_P > 0, S_P_in_class / S_P, 0)
+
+  # C. Calculate Discriminative-Weight (DW)
+  # DW(P, C) = S(P in C) - S(P in not C) (since only two classes)
+  DW <- S_P_in_class - S_P_in_not_class
+
+  # D. Store Results
+  weights_df[i, "Typical_Weight"] <- TW
+  weights_df[i, "Discriminative_Weight"] <- DW
+}
+
+# --- 4. Display the results ---
+print(weights_df)
+```
 
 
 ### References
