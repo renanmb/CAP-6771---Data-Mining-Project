@@ -280,70 +280,198 @@ print(weights_df)
 ```
 
 
-```{r}
-# 1. Ensure the grouping variable is a factor
-jhs_data1$BPjnc7 <- as.factor(jhs_data1$BPjnc7)
-
-# 2. Standardize predictor variables for accurate typical-weights
-jhs_data1_std <- jhs_data1 %>% 
-  mutate(across(c(HbA1c, age, waist, totchol, BMI, LVMecho), scale))
-```
-
-```{r}
-# 3. Perform LDA on standardized data to get the Typical-Weights (Canonical Coefficients)
-lda_model_std <- lda(BPjnc7 ~ HbA1c + age + waist + totchol + BMI + LVMecho, data = jhs_data1_std)
-typical_weights <- as.data.frame(lda_model_std$scaling)
-colnames(typical_weights) <- paste0("LD", 1:ncol(typical_weights), "_Typical_Weight")
-cat("\n\nTypical Weights (Standardized Canonical Coefficients):\n")
-print(typical_weights)
-```
-
-```{{r}}
-# 4. Perform LDA on original data for Discriminative-Weights (Structure Coefficients)
-lda_model <- lda(BPjnc7 ~ HbA1c + age + waist + totchol + BMI + LVMecho, data = jhs_data1)
-discriminative_weights <- rstatix::get_discriminant_loadings(lda_model)
-cat("\n\nDiscriminative Weights (Structure Coefficients/Loadings):\n")
-print(discriminative_weights)
-```
-
-```{{r}}
-# 1. Calculate the Discriminant Function Scores (DF scores) for each subject
-# The 'predict' function gives you the values for LD1, LD2, etc.
-ld_scores <- predict(lda_model, jhs_data1)$x
-ld_scores <- as.data.frame(ld_scores)
-
-# 2. Extract the continuous predictor variables
-predictor_vars <- jhs_data1 %>%
-  dplyr::select(HbA1c, age, waist, totchol, BMI, LVMecho)
-
-# 3. Calculate the Discriminative Weights (Structure Coefficients)
-# These are the correlations between the predictor variables and the LD scores.
-discriminative_weights <- cor(predictor_vars, ld_scores)
-
-cat("\n\nDiscriminative Weights (Structure Coefficients/Loadings):\n")
-print(discriminative_weights)
-```
-
-```{r}
-# Save the weights for the final explanation
-# Placeholder for actual data analysis
-# typical_weight_age <- typical_weights["age", "LD1_Typical_Weight"]
-# discriminative_weight_age <- discriminative_weights %>% 
-#   filter(variable == "age") %>% 
-#   pull(LD1)
-```
-
-### Explanation with Placeholder Values
-
-The **typical-weights** are the standardized coefficients used to calculate a subject's discriminant score, showing the relative contribution of each variable. For instance, **age** has a typical-weight of **0.85** on the first discriminant function (LD1), meaning it is a strong contributor to the function, while the **discriminative-weights** are the correlations between the predictors and the discriminant functions, indicating shared variance. **Age** has a discriminative-weight (loading) of **0.91** on LD1, suggesting it is highly correlated with the primary dimension that separates the **`BPjnc7`** groups.
-
 ## 4. Association Rules
 
-Run your preprocessed dataset (project dataset) on WEKA and find the association rules using the Apriori algorithm.  
+To apply the Apriori algorithm from the arules package, the data must be in a transactional format consisting of categorical items. The continuous variables in jhs_data1 must first be converted into categorical factors through discretization (binning).
 
-Present at least 10 valid association rules and give an interpretation of the association rules. 
+### 4.1. Data Discretization and Conversion
 
-Interpretation of your results should include the support and confidence values you used and an interpretation of the support and confidence values.
+We'll discretize the continuous variables into logical bins using the cut() function and then convert the data frame to the transactions class.
+
+```{r}
+# --- Data Preparation for arules ---
+
+# Select all required columns from jhs_data1
+jhs_arules_data <- jhs_data1 %>%
+  select(subjid, HbA1c, age, waist, BPmeds, everSmoker, currentSmoker, BPjnc7, HTN, totchol, BMI, LVMecho, HSgrad, BMI3cat, nutrition3cat, idealHealthBP, idealHealthSMK, idealHealthDM, idealHealthNutrition, idealHealthPA, idealHealthBMI, idealHealthChol, PrivatePublicIns, smoking)
+
+# Remove the original subjid and the dummy smoking variables for a cleaner transaction set
+jhs_arules_data <- jhs_arules_data %>%
+  select(-subjid, -currentSmoker, -everSmoker)
+
+# 1. Discretize Continuous Variables into Factors
+# Age: 4 bins based on common demographic groupings
+jhs_arules_data$age_group <- cut(jhs_arules_data$age,
+                                 breaks = c(40, 50, 60, 70, Inf),
+                                 labels = c("age_40-50", "age_51-60", "age_61-70", "age_71+"),
+                                 right = FALSE)
+
+# BMI: Bins based on standard WHO classifications
+jhs_arules_data$bmi_group <- cut(jhs_arules_data$BMI,
+                                 breaks = c(0, 18.5, 25, 30, Inf),
+                                 labels = c("BMI_Underweight", "BMI_Normal", "BMI_Overweight", "BMI_Obese"),
+                                 right = FALSE)
+
+# Waist Circumference: Bins based on risk thresholds (approximate)
+jhs_arules_data$waist_group <- cut(jhs_arules_data$waist,
+                                   breaks = c(0, 94, 102, Inf), # <94=low, 94-102=high, >102=very high
+                                   labels = c("waist_low", "waist_high", "waist_very_high"),
+                                   right = FALSE)
+
+# HbA1c: Bins based on diabetes diagnosis
+jhs_arules_data$hba1c_group <- cut(jhs_arules_data$HbA1c,
+                                   breaks = c(0, 5.7, 6.5, Inf),
+                                   labels = c("HbA1c_Normal", "HbA1c_Pre-Diabetic", "HbA1c_Diabetic"),
+                                   right = FALSE)
+
+# Total Cholesterol (totchol): Bins based on common guidelines
+jhs_arules_data$totchol_group <- cut(jhs_arules_data$totchol,
+                                     breaks = c(0, 200, 240, Inf),
+                                     labels = c("Chol_Ideal", "Chol_Borderline", "Chol_High"),
+                                     right = FALSE)
+
+# LVMecho (Left Ventricular Mass): Bins (simple split around the mean)
+mean_LVMecho <- mean(jhs_arules_data$LVMecho, na.rm = TRUE)
+jhs_arules_data$LVMecho_group <- cut(jhs_arules_data$LVMecho,
+                                     breaks = c(0, mean_LVMecho, Inf),
+                                     labels = c("LVM_BelowAvg", "LVM_AboveAvg"),
+                                     right = FALSE)
+
+# 2. Select the grouped and all existing categorical/binary variables
+transaction_df <- jhs_arules_data %>%
+  select(-age, -BMI, -waist, -HbA1c, -totchol, -LVMecho) %>% # Remove original continuous vars
+  mutate_all(as.factor) %>% # Ensure all are factors
+  na.omit() # Remove NAs after all grouping/selection
+
+# 3. Convert data frame to transactions object
+# The 'list' format is crucial here: each row is a transaction/subject, 
+# and the factor levels in each column become the 'items' in the transaction.
+jhs_transactions <- as(transaction_df, "transactions")
+
+# Check the transaction data
+summary(jhs_transactions)
+itemFrequencyPlot(jhs_transactions, topN = 10, main = "Top 10 Item Frequencies")
+```
+
+### 4.2. Generating Association Rules with Apriori
+
+The Apriori algorithm is used to mine frequent itemsets and derive association rules. We will set minimum thresholds for **Support** and **Confidence** to filter out uninteresting rules.
+
+* **Support:** The proportion of transactions that contain the itemset (rule).
+* **Confidence:** The probability that the consequent (RHS) is present, given that the antecedent (LHS) is present.
+
+We will use:
+
+* **Support $= 0.05$ (5%):** An itemset must appear in at least 5% of all transactions. This is a common starting point for a moderately large dataset.
+* **Confidence $= 0.90$ (90%):** If the antecedent occurs, the consequent occurs 90% of the time. This ensures we have rules that are reasonably predictive.
+
+```{r}
+# --- Training Apriori on the dataset ---
+# Using the prepared transaction data and defined parameters
+SUPPORT_VALUE <- 0.05
+CONFIDENCE_VALUE <- 0.90
+
+rules <- apriori(data = jhs_transactions,
+                 parameter = list(support = SUPPORT_VALUE, 
+                                   confidence = CONFIDENCE_VALUE, 
+                                   minlen = 2)) # minlen = 2 ensures rules have at least 2 items
+
+# Summarize the generated rules
+summary(rules)
+```
+
+### 4.3 Examining and Interpreting the Rules
+
+The generated rules are sorted by the Lift metric, which indicates how much more likely the consequent is, given the antecedent, compared to a random occurrence. A Lift $> 1$ indicates a positive association.
+
+The top 10 most relevant association rules, based on the Lift metric, are presented below.
+
+```{r}
+# Sort the rules by Lift and inspect the top 10
+rules_sorted <- sort(rules, by = "lift", decreasing = TRUE)
+inspect(head(rules_sorted, n = 10))
+```
+
+### 4.4. Interpretation of Results
+
+The Apriori algorithm generated [Number of rules from summary(rules) - e.g., 34] rules using a Support value of $0.05$ and a Confidence value of $0.70$.
+
+Comparing the results from the R package arules and the Weka software the obtain different results which is interesting and highlights the need to further study and understanding how they work, and how they differ.
+
+**1. Interpretation of Support and Confidence Values**
+
+* **Support ($0.05$):** This means that for a rule (e.g., $\{A\} \to \{B\}$) to be considered, the combination of all items in the rule (both A and B) must appear in at least 5% of all the patient records in our dataset ($0.05 \times N_{\text{total}}$ transactions). Items that are very rare and do not meet this threshold are excluded, making the results more robust.
+* **Confidence ($0.70$):** This means that for a rule to be kept, whenever the items in the antecedent (LHS, or the "IF" part) are present in a patient record, the items in the consequent (RHS, or the "THEN" part) must also be present in at least 70% of those records. This guarantees that the relationships we observe are relatively strong and consistent.
+
+**2. Interpretation of Select Association Rules**
+
+#### 4.4.1 Interpretation of Results from R(arules)
+
+| ID    | Rule (Antecedent → Consequent)                                                                                  | Support | Confidence | Lift  | Interpretation |
+|-------|------------------------------------------------------------------------------------------------------------------|---------|------------|-------|----------------|
+| 8059  | `{idealHealthSMK=0, idealHealthPA=0, LVMecho_group=LVM_AboveAvg} → {smoking=1}`                                 | 0.051   | 0.984      | 9.124 | Participants who do not meet ideal smoking and physical activity metrics, AND have above-average Left Ventricular Mass are 9.124 times more likely to be a current smoker (98.4% certainty). |
+| 63639 | `{idealHealthSMK=0, idealHealthNutrition=0, idealHealthPA=0, LVMecho_group=LVM_AboveAvg} → {smoking=1}`         | 0.051   | 0.984      | 9.124 | Participants who do not meet ideal metrics for smoking, nutrition, and physical activity, AND have above-average Left Ventricular Mass are 9.124 times more likely to be a current smoker (98.4% certainty). |
+| 8077  | `{BPmeds=0, idealHealthSMK=0, idealHealthPA=0} → {smoking=1}`                                                   | 0.058   | 0.973      | 9.018 | Participants who are not on BP medication, but do not meet ideal smoking and physical activity metrics are 9.018 times more likely to be a current smoker (97.3% certainty). |
+| 63655 | `{BPmeds=0, idealHealthSMK=0, idealHealthNutrition=0, idealHealthPA=0} → {smoking=1}`                           | 0.058   | 0.973      | 9.018 | Participants who are not on BP medication, but do not meet ideal metrics for smoking, nutrition, and physical activity are 9.018 times more likely to be a current smoker (97.3% certainty). |
+| 8083  | `{BPmeds=0, idealHealthSMK=0, idealHealthBMI=0} → {smoking=1}`                                                  | 0.056   | 0.972      | 9.008 | Participants who are not on BP medication, but do not meet ideal smoking and BMI (obesity) metrics are 9.008 times more likely to be a current smoker (97.2% certainty). |
+| 63663 | `{BPmeds=0, idealHealthSMK=0, idealHealthNutrition=0, idealHealthBMI=0} → {smoking=1}`                          | 0.056   | 0.972      | 9.008 | Participants who are not on BP medication, but do not meet ideal metrics for smoking, nutrition, and BMI (obesity) are 9.008 times more likely to be a current smoker (97.2% certainty). |
+| 8074  | `{BPmeds=0, nutrition3cat=0, idealHealthSMK=0} → {smoking=1}`                                                   | 0.052   | 0.970      | 8.992 | Participants who are not on BP medication, have poor health nutrition (nutrition3cat=0), and do not meet ideal smoking metrics are 8.992 times more likely to be a current smoker (97.0% certainty). |
+| 63651 | `{BPmeds=0, nutrition3cat=0, idealHealthSMK=0, idealHealthNutrition=0} → {smoking=1}`                           | 0.052   | 0.970      | 8.992 | Participants who are not on BP medication, have poor health nutrition (nutrition3cat=0), and do not meet ideal smoking and nutrition metrics are 8.992 times more likely to be a current smoker (97.0% certainty). |
+| 631   | `{BPmeds=0, idealHealthSMK=0} → {smoking=1}`                                                                    | 0.068   | 0.955      | 8.847 | The baseline rule: participants who are not on BP medication, but do not meet ideal smoking metrics are 8.847 times more likely to be a current smoker (95.5% certainty). |
+| 8086  | `{BPmeds=0, idealHealthSMK=0, idealHealthNutrition=0} → {smoking=1}`                                            | 0.068   | 0.955      | 8.847 | Participants who are not on BP medication, but do not meet ideal smoking and nutrition metrics are 8.847 times more likely to be a current smoker (95.5% certainty). |
+
+#### 4.4.2 Interpretation of Results from Weka
+
+Scheme:       weka.associations.Apriori -N 10 -T 1 -C 8.0 -D 0.05 -U 1.0 -M 0.05 -S -1.0 -c -1
+
+| Rule   | Support | Confidence | Lift | Interpretation |
+|--------|----------|------------|-------|----------------|
+| Rule 1 **{BPmeds=0, BPjnc7=0, idealHealthChol=1} → {HSgrad=1, idealHealthBP=1, totchol_group=Chol_Ideal}** | 0.104    | 0.94       | 8.47  | Individuals with no BP medications, normal BP by JNC7, and ideal cholesterol almost always also have ideal BP, ideal total cholesterol, and tend to be high-school graduates. |
+| Rule 2 **{idealHealthBP=1, idealHealthChol=1} → {BPmeds=0, BPjnc7=0, HSgrad=1, totchol_group=Chol_Ideal}** | 0.104    | 0.94       | 8.47  | Those with ideal BP and ideal cholesterol metrics strongly tend to also have normal clinical BP, no BP meds, ideal total cholesterol, and high-school graduation. |
+| Rule 3 **{BPmeds=0, BPjnc7=0, HSgrad=1, totchol_group=Chol_Ideal} → {idealHealthBP=1, idealHealthChol=1}** | 0.104    | 0.93       | 8.47  | People with normal BP, no BP meds, high-school graduation, and ideal total cholesterol almost always also meet the ideal BP and ideal cholesterol metrics. |
+| Rule 4 **{HSgrad=1, idealHealthBP=1, totchol_group=Chol_Ideal} → {BPmeds=0, BPjnc7=0, idealHealthChol=1}** | 0.104    | 0.93       | 8.47  | Having ideal BP and ideal total cholesterol strongly predicts absence of BP medication use, normal JNC7 BP, and ideal cholesterol metric. |
+| Rule 5 **{BPmeds=0, BPjnc7=0, idealHealthChol=1} → {HTN=0, HSgrad=1, idealHealthBP=1, totchol_group=Chol_Ideal}** | 0.104    | 0.94       | 8.47  | Normal BP by JNC7, no BP meds, and ideal cholesterol very strongly predict absence of hypertension plus ideal BP and cholesterol. |
+| Rule 6 **{BPmeds=0, BPjnc7=0, HTN=0, idealHealthChol=1} → {HSgrad=1, idealHealthBP=1, totchol_group=Chol_Ideal}** | 0.104    | 0.94       | 8.47  | Individuals with normal BP, no hypertension, no BP meds, and ideal cholesterol almost always also have ideal BP and ideal total cholesterol. |
+| Rule 7 **{idealHealthBP=1, idealHealthChol=1} → {BPmeds=0, BPjnc7=0, HTN=0, HSgrad=1, totchol_group=Chol_Ideal}** | 0.104    | 0.94       | 8.47  | Ideal BP and cholesterol strongly predict absence of hypertension, absence of BP medication use, and ideal measured cholesterol. |
+| Rule 8 **{HTN=0, idealHealthBP=1, idealHealthChol=1} → {BPmeds=0, BPjnc7=0, HSgrad=1, totchol_group=Chol_Ideal}** | 0.104    | 0.94       | 8.47  | Having no hypertension plus ideal BP and cholesterol almost always predicts normal clinical BP and ideal cholesterol group membership. |
+| Rule 9 **{BPmeds=0, BPjnc7=0, HSgrad=1, totchol_group=Chol_Ideal} → {HTN=0, idealHealthBP=1, idealHealthChol=1}** | 0.104    | 0.93       | 8.47  | Patients with normal clinical BP, no BP meds, high-school graduation, and ideal cholesterol usually also have no hypertension and ideal BP/cholesterol metrics. |
+| Rule 10 **{BPmeds=0, BPjnc7=0, HTN=0, HSgrad=1, totchol_group=Chol_Ideal} → {idealHealthBP=1, idealHealthChol=1}** | 0.104   | 0.93       | 8.47  | Normal BP, no BP meds, no hypertension, high-school graduation, and ideal total cholesterol almost always imply ideal BP and ideal cholesterol metrics. |
+
+
+
+
+```{r}
+# 1. Select the top 10 rules
+top_rules <- head(rules_sorted, n = 10)
+
+# 2. Convert the rules object to a data frame
+rules_df <- as(top_rules, "data.frame")
+
+# 3. Select and rename columns for the final table
+rules_table <- rules_df %>%
+  # The 'rules' column is generated by converting the rule object
+  select(rules, support, confidence, lift) %>%
+  # Add the Interpretation column as an empty placeholder
+  mutate(Interpretation = "")
+
+# 4. Format all numeric columns to two decimal places
+rules_table <- rules_table %>%
+  mutate(across(c(support, confidence, lift), ~ round(.x, 3)))
+
+# 5. Use knitr::kable to generate the final markdown table
+knitr::kable(
+  rules_table,
+  caption = "Top 10 Association Rules Sorted by Lift (Support=0.05, Confidence=0.70)",
+  col.names = c("Rule (Antecedent -> Consequent)", "Support", "Confidence", "Lift", "Interpretation")
+)
+```
+
+<!-- TODO create a table -->
+
+
+```{r}
+# write.csv(transaction_df, "jhs_weka_input.csv", row.names = FALSE)
+```
 
 
 
