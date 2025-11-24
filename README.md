@@ -61,6 +61,14 @@ Syncing the environment
 uv sync
 ```
 
+```bash
+quarto publish gh-pages
+```
 
+```bash
+renv::status() 
+renv::restore()
+renv::rebuild()
+```
 
 
