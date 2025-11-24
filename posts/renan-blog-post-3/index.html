@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -88,18 +88,19 @@ div.csl-indent {
 <meta name="quarto:offset" content="../../">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-1773efb2f7ab98e3656670b7729847ad.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-cef3429e03e90a75e86301dc8df8cee2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-1773efb2f7ab98e3656670b7729847ad.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-960d9d362f81d399278ec3e29b622b37.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-e7f4145358ce1d0cd37d8d374dbb44f9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-960d9d362f81d399278ec3e29b622b37.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -152,7 +153,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -448,11 +449,11 @@ window.Quarto = {
 <p>Furthermore, leveraging a <strong>data cube</strong> structure built on <strong>hierarchies</strong> allows for powerful, multidimensional analysis. For instance, the <code>Date</code> field isn’t just a single point in time; it’s part of a hierarchy that can be “rolled up” from a specific day to a <strong>Month</strong>, <strong>Quarter</strong>, or <strong>Year</strong>. Similarly, the <code>RegionName</code> (State) could be aggregated into broader geographical regions (e.g., “Northeast”, “West Coast”). By combining these binned and hierarchical dimensions, we can quickly “slice and dice” the data to answer complex questions, such as “How many homes in the $200k-$250k price bin were available in the <em>Northeast</em> region during <em>Q3 2018</em>?” This turns a massive, raw dataset into a flexible tool for gaining actionable insights.</p>
 <p>The Zillow Home Value Index or ZHVI is a smoothed, seasonally adjusted measure of the typical home value and market changes across a given region and housing type. It reflects the typical value for homes in the 35th to 65th percentile range.</p>
 <p>The Dataset <a href="https://www.kaggle.com/datasets/zillow/zecon">Zillow Economics Data</a><span class="citation" data-cites="ZHVI"><sup>[<a href="#ref-ZHVI" role="doc-biblioref"><strong>ZHVI?</strong></a>]</sup></span>, can be downloaded:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> <span class="at">-o</span> ~/Downloads/zecon.zip<span class="dt">\</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  https://www.kaggle.com/api/v1/datasets/download/zillow/zecon</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <!-- TODO Notes -->
 <!-- 
 Talk about how this relates to the Association rules and how the reocurrence of some features indicates paths of interest.
@@ -461,24 +462,24 @@ ZHVI is already a binned value.
 <section id="load-packages" class="level3">
 <h3 class="anchored" data-anchor-id="load-packages">1.1 Load packages</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("fpp3")</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("fpp3")</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fpp3)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtime)</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Possible errors makings notes:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Attaching</span> package: ‘ggtime’</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> following objects are masked from ‘package:feasts’:</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">gg_arma,</span> gg_irf, gg_lag, gg_season, gg_subseries, gg_tsdisplay,</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">gg_tsresiduals</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="load-the-dataset" class="level2">
@@ -487,7 +488,7 @@ ZHVI is already a binned value.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>find_git_root <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">start =</span> <span class="fu">getwd</span>()) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>find_git_root <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">start =</span> <span class="fu">getwd</span>()) {</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  path <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(start, <span class="at">winslash =</span> <span class="st">"/"</span>, <span class="at">mustWork =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (path <span class="sc">!=</span> <span class="fu">dirname</span>(path)) {</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">dir.exists</span>(<span class="fu">file.path</span>(path, <span class="st">".git"</span>))) <span class="fu">return</span>(path)</span>
@@ -501,7 +502,7 @@ ZHVI is already a binned value.
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>zillow_economics_data_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(datasets_path, <span class="st">"zillow-economics-data-01"</span>)</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>state_time_series <span class="ot">&lt;-</span> <span class="fu">file.path</span>(zillow_economics_data_path, <span class="st">"State_time_series.csv"</span>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>all_states_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(state_time_series)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>all_states_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(state_time_series)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -509,12 +510,12 @@ ZHVI is already a binned value.
 <h2 class="anchored" data-anchor-id="data-exploration-and-processing">3. Data Exploration and Processing</h2>
 <p>The ‘Date’ column is a character and should be converted to a Date object.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>all_states_data<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(all_states_data<span class="sc">$</span>Date)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># str(all_states_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>all_states_data<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(all_states_data<span class="sc">$</span>Date)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># str(all_states_data)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Exploring the N/As and the structure of the dataset:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the total number of rows for calculating percentages</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the total number of rows for calculating percentages</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>total_rows <span class="ot">&lt;-</span> <span class="fu">nrow</span>(all_states_data)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a pretty summary table</span></span>
@@ -537,7 +538,7 @@ ZHVI is already a binned value.
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(NA_Count))</span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the clean table</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(na_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(na_summary)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 80 × 3
    Column                                  NA_Count NA_Percentage
@@ -557,11 +558,11 @@ ZHVI is already a binned value.
 </div>
 <p>Sample of the Dataset in the form of a data table to make visually clear how the dataset looks like and what features are available.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"all_states_data (tsibble):"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"all_states_data (tsibble):"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "all_states_data (tsibble):"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(all_states_data, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(all_states_data, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in instance$preRenderHook(instance): It seems your data is too big for
 client-side DataTables. You may consider server-side processing:
@@ -573,8 +574,8 @@ https://rstudio.github.io/DT/server.html</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(all_states_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(all_states_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -1783,41 +1784,41 @@ https://rstudio.github.io/DT/server.html</code></pre>
 ⠄⠄⣀⣴⣾⣶⡞⣿⣿⣿⣿⣿⣿⣿⣾⣿⡿ 
 -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 1. Create Date Hierarchy ---</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 1. Create Date Hierarchy ---</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We parse the Date and extract hierarchy levels</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>processed_data <span class="ot">&lt;-</span> all_states_data <span class="sc">%&gt;%</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Year =</span> <span class="fu">year</span>(Date),</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Quarter =</span> <span class="fu">quarter</span>(Date, <span class="at">with_year =</span> <span class="cn">TRUE</span>),</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Month =</span> <span class="fu">month</span>(Date, <span class="at">label =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 2. Create Bins for a Measure ---</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 2. Create Bins for a Measure ---</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We bin 'MedianListingPrice_AllHomes' into categories</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>price_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">150000</span>, <span class="dv">200000</span>, <span class="dv">250000</span>, <span class="dv">300000</span>, <span class="dv">500000</span>, <span class="cn">Inf</span>)</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>price_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Under $150k"</span>, <span class="st">"$150k-$200k"</span>, <span class="st">"$200k-$250k"</span>,</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"$250k-$300k"</span>, <span class="st">"$300k-$500k"</span>, <span class="st">"Over $500k"</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>processed_data <span class="ot">&lt;-</span> processed_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>processed_data <span class="ot">&lt;-</span> processed_data <span class="sc">%&gt;%</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Price_Bin =</span> <span class="fu">cut</span>(MedianListingPrice_AllHomes,</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">breaks =</span> price_breaks,</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> price_labels,</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">right =</span> <span class="cn">FALSE</span>) <span class="co"># Bins are [min, max)</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the new hierarchical and binned columns</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Data with new hierarchy and bins:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the new hierarchical and binned columns</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Data with new hierarchy and bins:"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Data with new hierarchy and bins:"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(processed_data <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(RegionName, Date, Year, Quarter, Month, MedianListingPrice_AllHomes, Price_Bin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(processed_data <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(RegionName, Date, Year, Quarter, Month, MedianListingPrice_AllHomes, Price_Bin))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 13,212
 Columns: 7
@@ -1835,7 +1836,7 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 <h2 class="anchored" data-anchor-id="explore-zhvi-with-date-hierarchy">4. Explore ZHVI with Date Hierarchy</h2>
 <p>For sake of simplicity we are going to focus for now on a single State (California) and the Zillow Home Value Index (ZHVI_AllHomes) over time.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's analyze the Zillow Home Value Index (ZHVI_AllHomes) for "California".</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's analyze the Zillow Home Value Index (ZHVI_AllHomes) for "California".</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># all_states_data</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>cali_zhvi <span class="ot">&lt;-</span> processed_data <span class="sc">%&gt;%</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(RegionName <span class="sc">==</span> <span class="st">"California"</span>) <span class="sc">%&gt;%</span></span>
@@ -1844,10 +1845,10 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>cali_ts <span class="ot">&lt;-</span> cali_zhvi <span class="sc">%&gt;%</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tsibble</span>(<span class="at">index =</span> Date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tsibble</span>(<span class="at">index =</span> Date)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We set 'Date' as the 'index' (the time component).</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We set 'Date' as the 'index' (the time component).</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>cali_ts_fill_gaps <span class="ot">&lt;-</span> cali_zhvi <span class="sc">%&gt;%</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tsibble</span>(<span class="at">index =</span> Date) <span class="sc">%&gt;%</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fill_gaps</span>()</span>
@@ -1855,17 +1856,17 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Example for multiple states (not run here):</span></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># multi_state_ts &lt;- all_states_data %&gt;%</span></span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(Date, RegionName, ZHVI_AllHomes) %&gt;%</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   as_tsibble(index = Date, key = RegionName)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   as_tsibble(index = Date, key = RegionName)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Lets see how many N/As after filling the gaps:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count total NAs per column</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count total NAs per column</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(cali_ts))</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(cali_ts_fill_gaps))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(cali_ts_fill_gaps))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the new, focused data frame</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cali_zhvi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the new, focused data frame</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cali_zhvi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        Date ZHVI_AllHomes
 1 1996-04-30        157900
@@ -1875,7 +1876,7 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 5 1996-08-31        157000
 6 1996-09-30        156800</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cali_ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cali_ts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tsibble: 6 x 2 [1D]
   Date       ZHVI_AllHomes
@@ -1887,7 +1888,7 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 5 1996-08-31        157000
 6 1996-09-30        156800</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cali_ts_fill_gaps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cali_ts_fill_gaps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tsibble: 6 x 2 [1D]
   Date       ZHVI_AllHomes
@@ -1901,12 +1902,12 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>cali_ts <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>cali_ts <span class="sc">%&gt;%</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>(ZHVI_AllHomes) <span class="sc">+</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Zillow Home Value Index (ZHVI) for California"</span>,</span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Home Value Index"</span>,</span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1916,11 +1917,11 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will scan cali_ts and report any gaps</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will scan cali_ts and report any gaps</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>gap_summary <span class="ot">&lt;-</span> <span class="fu">count_gaps</span>(cali_ts)</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the summary</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(gap_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(gap_summary)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 260 × 3
    .from      .to           .n
@@ -1939,12 +1940,12 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>cali_ts_fill_gaps <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>cali_ts_fill_gaps <span class="sc">%&gt;%</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>(ZHVI_AllHomes) <span class="sc">+</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Zillow Home Value Index (ZHVI) for California"</span>,</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Home Value Index"</span>,</span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1954,21 +1955,21 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the new, focused data frame</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the new, focused data frame</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># print("cali_zhvi (data frame):")</span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># DT::datatable(cali_zhvi, options = list(pageLength = 5))</span></span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"cali_ts (tsibble):"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"cali_ts (tsibble):"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "cali_ts (tsibble):"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(cali_ts, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(cali_ts, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="datatables html-widget html-fill-item" id="htmlwidget-31f243abd9cb46fc494d" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-31f243abd9cb46fc494d">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259","260","261"],["1996-04-30","1996-05-31","1996-06-30","1996-07-31","1996-08-31","1996-09-30","1996-10-31","1996-11-30","1996-12-31","1997-01-31","1997-02-28","1997-03-31","1997-04-30","1997-05-31","1997-06-30","1997-07-31","1997-08-31","1997-09-30","1997-10-31","1997-11-30","1997-12-31","1998-01-31","1998-02-28","1998-03-31","1998-04-30","1998-05-31","1998-06-30","1998-07-31","1998-08-31","1998-09-30","1998-10-31","1998-11-30","1998-12-31","1999-01-31","1999-02-28","1999-03-31","1999-04-30","1999-05-31","1999-06-30","1999-07-31","1999-08-31","1999-09-30","1999-10-31","1999-11-30","1999-12-31","2000-01-31","2000-02-29","2000-03-31","2000-04-30","2000-05-31","2000-06-30","2000-07-31","2000-08-31","2000-09-30","2000-10-31","2000-11-30","2000-12-31","2001-01-31","2001-02-28","2001-03-31","2001-04-30","2001-05-31","2001-06-30","2001-07-31","2001-08-31","2001-09-30","2001-10-31","2001-11-30","2001-12-31","2002-01-31","2002-02-28","2002-03-31","2002-04-30","2002-05-31","2002-06-30","2002-07-31","2002-08-31","2002-09-30","2002-10-31","2002-11-30","2002-12-31","2003-01-31","2003-02-28","2003-03-31","2003-04-30","2003-05-31","2003-06-30","2003-07-31","2003-08-31","2003-09-30","2003-10-31","2003-11-30","2003-12-31","2004-01-31","2004-02-29","2004-03-31","2004-04-30","2004-05-31","2004-06-30","2004-07-31","2004-08-31","2004-09-30","2004-10-31","2004-11-30","2004-12-31","2005-01-31","2005-02-28","2005-03-31","2005-04-30","2005-05-31","2005-06-30","2005-07-31","2005-08-31","2005-09-30","2005-10-31","2005-11-30","2005-12-31","2006-01-31","2006-02-28","2006-03-31","2006-04-30","2006-05-31","2006-06-30","2006-07-31","2006-08-31","2006-09-30","2006-10-31","2006-11-30","2006-12-31","2007-01-31","2007-02-28","2007-03-31","2007-04-30","2007-05-31","2007-06-30","2007-07-31","2007-08-31","2007-09-30","2007-10-31","2007-11-30","2007-12-31","2008-01-31","2008-02-29","2008-03-31","2008-04-30","2008-05-31","2008-06-30","2008-07-31","2008-08-31","2008-09-30","2008-10-31","2008-11-30","2008-12-31","2009-01-31","2009-02-28","2009-03-31","2009-04-30","2009-05-31","2009-06-30","2009-07-31","2009-08-31","2009-09-30","2009-10-31","2009-11-30","2009-12-31","2010-01-31","2010-02-28","2010-03-31","2010-04-30","2010-05-31","2010-06-30","2010-07-31","2010-08-31","2010-09-30","2010-10-31","2010-11-30","2010-12-31","2011-01-31","2011-02-28","2011-03-31","2011-04-30","2011-05-31","2011-06-30","2011-07-31","2011-08-31","2011-09-30","2011-10-31","2011-11-30","2011-12-31","2012-01-31","2012-02-29","2012-03-31","2012-04-30","2012-05-31","2012-06-30","2012-07-31","2012-08-31","2012-09-30","2012-10-31","2012-11-30","2012-12-31","2013-01-31","2013-02-28","2013-03-31","2013-04-30","2013-05-31","2013-06-30","2013-07-31","2013-08-31","2013-09-30","2013-10-31","2013-11-30","2013-12-31","2014-01-31","2014-02-28","2014-03-31","2014-04-30","2014-05-31","2014-06-30","2014-07-31","2014-08-31","2014-09-30","2014-10-31","2014-11-30","2014-12-31","2015-01-31","2015-02-28","2015-03-31","2015-04-30","2015-05-31","2015-06-30","2015-07-31","2015-08-31","2015-09-30","2015-10-31","2015-11-30","2015-12-31","2016-01-31","2016-02-29","2016-03-31","2016-04-30","2016-05-31","2016-06-30","2016-07-31","2016-08-31","2016-09-30","2016-10-31","2016-11-30","2016-12-31","2017-01-31","2017-02-28","2017-03-31","2017-04-30","2017-05-31","2017-06-30","2017-07-31","2017-08-31","2017-09-30","2017-10-31","2017-11-30","2017-12-31"],[157900,157800,157500,157300,157000,156800,156900,157200,157500,158100,159000,159800,160000,160300,160600,161000,161300,161900,162600,163700,165000,166400,168100,168100,168000,169500,171900,173000,174300,175300,176600,177900,179000,180000,181100,182800,184400,185700,187000,188800,190600,192300,194300,196300,198700,201300,204200,206900,209600,212300,215000,217500,219900,222400,225000,227500,230000,232900,235900,238700,241400,243600,245500,247700,250000,252200,254100,256200,258600,261300,264100,267000,270100,273600,277200,281200,285500,290100,294400,298800,303200,307500,311500,315900,320100,324000,327500,331500,336000,341200,346700,352500,358900,365600,372600,380200,388700,398000,407800,417200,425700,433100,439800,445800,451600,457400,463300,469700,476000,482300,489000,496200,503000,509000,514400,519500,523500,525800,527500,529300,530900,532100,532700,532200,530500,528200,526000,523600,520700,518300,517000,515800,513900,511300,507900,503500,498400,492800,487200,481300,473800,465300,455900,445600,435200,425600,416000,407100,399900,393900,388100,382600,376900,371400,366100,360700,354800,348400,342900,339100,336600,334600,333100,331500,332500,335100,336500,336300,336600,336500,335700,334300,332600,330800,329000,327300,325600,323700,321900,320000,317600,315600,313900,311600,309200,307600,306400,305400,304600,304200,304300,304900,306100,308000,310300,313000,315900,318600,321300,324900,329100,333000,337500,343600,350800,358300,365900,373100,379400,384600,389000,392500,395100,397600,400400,403400,406100,408700,411000,413100,415200,417300,419300,420900,422500,424200,426400,429000,431700,434300,436700,439300,441900,444600,446900,449300,451500,453700,456500,459600,462300,464300,467200,470400,473000,475400,478500,481700,484600,487400,490500,494300,498100,501700,504600,507100,509900,513000,516500,520500,524000]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Date<\/th>\n      <th>ZHVI_AllHomes<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Date","targets":1},{"name":"ZHVI_AllHomes","targets":2}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print("cali_ts_fill_gaps (tsibble with filled gaps):")</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># DT::datatable(cali_ts_fill_gaps, options = list(pageLength = 5))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print("cali_ts_fill_gaps (tsibble with filled gaps):")</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># DT::datatable(cali_ts_fill_gaps, options = list(pageLength = 5))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol type="1">
 <li>Create a new ‘Month’ column using the yearmonth() function</li>
@@ -1977,18 +1978,18 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 <li>Convert to a tsibble, now indexed by the new ‘Month’ object</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cali_ts_monthly <span class="ot">&lt;-</span> cali_zhvi <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cali_ts_monthly <span class="ot">&lt;-</span> cali_zhvi <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Month =</span> <span class="fu">yearmonth</span>(Date)) <span class="sc">%&gt;%</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Month) <span class="sc">%&gt;%</span></span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ZHVI_AllHomes =</span> <span class="fu">mean</span>(ZHVI_AllHomes, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tsibble</span>(<span class="at">index =</span> Month)</span>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the new object</span></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"New Monthly Tsibble:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"New Monthly Tsibble:"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "New Monthly Tsibble:"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cali_ts_monthly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cali_ts_monthly)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tsibble: 6 x 2 [1M]
      Month ZHVI_AllHomes
@@ -2000,23 +2001,23 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 5 1996 Aug        157000
 6 1996 Sep        156800</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note the &lt;mth&gt; tag in the output, indicating it's a monthly tsibble</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Class of the new index:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note the &lt;mth&gt; tag in the output, indicating it's a monthly tsibble</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Class of the new index:"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Class of the new index:"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(cali_ts_monthly<span class="sc">$</span>Month)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(cali_ts_monthly<span class="sc">$</span>Month)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "yearmonth"  "vctrs_vctr"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cali_ts_monthly <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cali_ts_monthly <span class="sc">%&gt;%</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>(ZHVI_AllHomes) <span class="sc">+</span></span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Zillow Home Value Index (ZHVI) for California"</span>,</span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Home Value Index"</span>,</span>
 <span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -2031,11 +2032,11 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 <p>This happens if you (or R) accidentally convert a Date object to a plain number.</p>
 <p>The yearmonth object we created in the last step is different. It prints as “1996 Apr” and internally stores the number of months since the 1970 epoch (which would be a much smaller number, like 316).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"cali_ts_monthly (tsibble with only monthly):"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"cali_ts_monthly (tsibble with only monthly):"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "cali_ts_monthly (tsibble with only monthly):"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(cali_ts_monthly, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(cali_ts_monthly, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="datatables html-widget html-fill-item" id="htmlwidget-94842f8287da2a304671" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-94842f8287da2a304671">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259","260","261"],[9587,9617,9648,9678,9709,9740,9770,9801,9831,9862,9893,9921,9952,9982,10013,10043,10074,10105,10135,10166,10196,10227,10258,10286,10317,10347,10378,10408,10439,10470,10500,10531,10561,10592,10623,10651,10682,10712,10743,10773,10804,10835,10865,10896,10926,10957,10988,11017,11048,11078,11109,11139,11170,11201,11231,11262,11292,11323,11354,11382,11413,11443,11474,11504,11535,11566,11596,11627,11657,11688,11719,11747,11778,11808,11839,11869,11900,11931,11961,11992,12022,12053,12084,12112,12143,12173,12204,12234,12265,12296,12326,12357,12387,12418,12449,12478,12509,12539,12570,12600,12631,12662,12692,12723,12753,12784,12815,12843,12874,12904,12935,12965,12996,13027,13057,13088,13118,13149,13180,13208,13239,13269,13300,13330,13361,13392,13422,13453,13483,13514,13545,13573,13604,13634,13665,13695,13726,13757,13787,13818,13848,13879,13910,13939,13970,14000,14031,14061,14092,14123,14153,14184,14214,14245,14276,14304,14335,14365,14396,14426,14457,14488,14518,14549,14579,14610,14641,14669,14700,14730,14761,14791,14822,14853,14883,14914,14944,14975,15006,15034,15065,15095,15126,15156,15187,15218,15248,15279,15309,15340,15371,15400,15431,15461,15492,15522,15553,15584,15614,15645,15675,15706,15737,15765,15796,15826,15857,15887,15918,15949,15979,16010,16040,16071,16102,16130,16161,16191,16222,16252,16283,16314,16344,16375,16405,16436,16467,16495,16526,16556,16587,16617,16648,16679,16709,16740,16770,16801,16832,16861,16892,16922,16953,16983,17014,17045,17075,17106,17136,17167,17198,17226,17257,17287,17318,17348,17379,17410,17440,17471,17501],[157900,157800,157500,157300,157000,156800,156900,157200,157500,158100,159000,159800,160000,160300,160600,161000,161300,161900,162600,163700,165000,166400,168100,168100,168000,169500,171900,173000,174300,175300,176600,177900,179000,180000,181100,182800,184400,185700,187000,188800,190600,192300,194300,196300,198700,201300,204200,206900,209600,212300,215000,217500,219900,222400,225000,227500,230000,232900,235900,238700,241400,243600,245500,247700,250000,252200,254100,256200,258600,261300,264100,267000,270100,273600,277200,281200,285500,290100,294400,298800,303200,307500,311500,315900,320100,324000,327500,331500,336000,341200,346700,352500,358900,365600,372600,380200,388700,398000,407800,417200,425700,433100,439800,445800,451600,457400,463300,469700,476000,482300,489000,496200,503000,509000,514400,519500,523500,525800,527500,529300,530900,532100,532700,532200,530500,528200,526000,523600,520700,518300,517000,515800,513900,511300,507900,503500,498400,492800,487200,481300,473800,465300,455900,445600,435200,425600,416000,407100,399900,393900,388100,382600,376900,371400,366100,360700,354800,348400,342900,339100,336600,334600,333100,331500,332500,335100,336500,336300,336600,336500,335700,334300,332600,330800,329000,327300,325600,323700,321900,320000,317600,315600,313900,311600,309200,307600,306400,305400,304600,304200,304300,304900,306100,308000,310300,313000,315900,318600,321300,324900,329100,333000,337500,343600,350800,358300,365900,373100,379400,384600,389000,392500,395100,397600,400400,403400,406100,408700,411000,413100,415200,417300,419300,420900,422500,424200,426400,429000,431700,434300,436700,439300,441900,444600,446900,449300,451500,453700,456500,459600,462300,464300,467200,470400,473000,475400,478500,481700,484600,487400,490500,494300,498100,501700,504600,507100,509900,513000,516500,520500,524000]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Month<\/th>\n      <th>ZHVI_AllHomes<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Month","targets":1},{"name":"ZHVI_AllHomes","targets":2}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
@@ -2097,7 +2098,7 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 <li>ZHVI Calculation: <span class="math inline">\(\text{ZHVI}(t) = \text{ZHVI}(t-1) \times (1 + \text{Monthly Appreciation})\)</span></li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this seems to be incorrect</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this seems to be incorrect</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Create a hypothetical set of 100 home sales.</span></span>
 <span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># We'll use random numbers for this example.</span></span>
@@ -2120,23 +2121,23 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 <span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>simulated_zhvi <span class="ot">&lt;-</span> <span class="fu">mean</span>(middle_tier_homes)</span>
 <span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Print the results ---</span></span>
-<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Total number of hypothetical sales:"</span>, <span class="fu">length</span>(hypothetical_sales)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Total number of hypothetical sales:"</span>, <span class="fu">length</span>(hypothetical_sales)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Total number of hypothetical sales: 100"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"35th Percentile Value:"</span>, q35))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"35th Percentile Value:"</span>, q35))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "35th Percentile Value: 328947.5"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"65th Percentile Value:"</span>, q65))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"65th Percentile Value:"</span>, q65))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "65th Percentile Value: 389868.05"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Number of homes in middle-tier (35th-65th percentile):"</span>, <span class="fu">length</span>(middle_tier_homes)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Number of homes in middle-tier (35th-65th percentile):"</span>, <span class="fu">length</span>(middle_tier_homes)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Number of homes in middle-tier (35th-65th percentile): 30"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Simulated ZHVI (Mean of middle-tier):"</span>, <span class="fu">round</span>(simulated_zhvi, <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Simulated ZHVI (Mean of middle-tier):"</span>, <span class="fu">round</span>(simulated_zhvi, <span class="dv">2</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Simulated ZHVI (Mean of middle-tier): 359053.03"</code></pre>
 </div>
@@ -2226,13 +2227,14 @@ $ Price_Bin                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
