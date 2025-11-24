@@ -6381,9 +6381,9 @@ SUPPORT_VALUE, : Mining stopped (maxlen reached). Only patterns up to a length
 of 10 returned!</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code> done [0.48s].
+<pre><code> done [0.46s].
 writing ... [2056716 rule(s)] done [0.17s].
-creating S4 object  ... done [0.79s].</code></pre>
+creating S4 object  ... done [0.78s].</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the generated rules</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rules)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -6470,6 +6470,7 @@ mining info:
 <section id="interpretation-of-results" class="level3">
 <h3 class="anchored" data-anchor-id="interpretation-of-results">4.4. Interpretation of Results</h3>
 <p>The Apriori algorithm generated [Number of rules from summary(rules) - e.g., 34] rules using a Support value of <span class="math inline">\(0.05\)</span> and a Confidence value of <span class="math inline">\(0.70\)</span>.</p>
+<p>Comparing the results from the R package arules and the Weka software the obtain different results which is interesting and highlights the need to further study and understanding how they work, and how they differ.</p>
 <p><strong>1. Interpretation of Support and Confidence Values</strong></p>
 <ul>
 <li><strong>Support (<span class="math inline">\(0.05\)</span>):</strong> This means that for a rule (e.g., <span class="math inline">\(\{A\} \to \{B\}\)</span>) to be considered, the combination of all items in the rule (both A and B) must appear in at least 5% of all the patient records in our dataset (<span class="math inline">\(0.05 \times N_{\text{total}}\)</span> transactions). Items that are very rare and do not meet this threshold are excluded, making the results more robust.</li>
