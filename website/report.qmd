@@ -12,6 +12,24 @@ Slides: [slides.html](slides.html){target="_blank"}
 
 Need to add report stuff
 
+Notes 
+
+must include the following
+
+1. What is your dataset about? How many attributes and how many rows did you start with?
+2. Give source of your data set.
+3. What you did for your preprocessing – you probably have this already written, in which case you can just cut and paste. Some of you may just have to “polish” this up.
+4. What are categories did you finally end up analyzing and why?
+5. What are the t-weights telling you? 
+6. What are the d-weights telling you?
+7. Summary of your association rule mining results. You can present the best 20, but discussing the first 10 will be fine. 
+8. Present and discuss you information gain results. What are they telling you? Which attributes are important? In what order?
+9. Present and discuss your decision tree results.
+10. What is your final conclusion? Actually, if your dataset’s categories were broken up correctly, and the analysis was done correctly, your t-weight results should match with your other results. Other questions to help you out -- what did you find? If you did not find much, what might have gone wrong, and if you were to re-do it, what would you re-do?
+11. Anything else specific to your dataset that I left out.
+12. The project was group work, so please make sure you include ALL your group member names – all those who should have credit.
+
+
 
 ### References
 
